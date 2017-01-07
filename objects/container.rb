@@ -1,6 +1,4 @@
-require_relative 'overall_object'
-
-class Container < OverallObject
+class Container
 
   # ----- Attributes ----- #
   attr_reader :stack
@@ -41,9 +39,13 @@ class Container < OverallObject
   # ----- Representation ----- #
   def to_s
     return "()" if @stack.empty? && @knowns.empty?
-    return "#{knowns_str}" if @stack.empty?
-    return "#{stack_str}" if @knowns.empty?
+    return knowns_str if @stack.empty?
+    return stack_str if @knowns.empty?
     "(#{stack_str}, #{knowns_str})"
+  end
+
+  def inspect
+    "#{self.class}#{to_s}"
   end
 
   def stack_str
@@ -62,9 +64,6 @@ class Container < OverallObject
     @stack.collect{ |ele| ele.awesome_inspect(options) }
   end
 
-  def inspect_body_str
-    "[#{@body.collect(&:inspect).join(', ')}]"
-  end
 end
 
 
