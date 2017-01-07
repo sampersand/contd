@@ -1,2 +1,0 @@
-class OverallObject
-end
