@@ -1,14 +1,19 @@
-require_relative 'overall_object'
-class Identifier < OverallObject
-  def initialize(token:)
+class Identifier
+
+  def initialize(token)
     @token = token
   end
 
+  # ----- Representation ----- #
   def to_s
     @token.to_s
   end
+
+  def inspect
+    "#{self.class}( #{to_s} )"
+  end
+
   def awesome_inspect(options)
-    # @token
     self
   end
 end
