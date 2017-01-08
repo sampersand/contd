@@ -41,7 +41,7 @@ class Parser
   def parse_tokens(tokens)
     stack = Container.new
     opers = Container.new
-    p tokens.stack
+    puts tokens
     exit
     # until tokens.empty?
     #   case (token = tokens.shift)
