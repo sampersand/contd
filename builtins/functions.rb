@@ -1,8 +1,11 @@
 module Functions
+  AllFunctions = {}
+
   class Function
     def initialize(name, &func)
       @name = name
       @func = func
+      AllFunctions[@name] = self
     end
 
     def to_s
@@ -22,7 +25,6 @@ module Functions
 
   public
   Index = Function.new(:index){ |results|
-    puts results
     arg_results, index = get_indexes(results)
     knowns_has = arg_results.knowns.include?(index)
     index_has = (0...arg_results.stack.length).include?(index)
@@ -35,6 +37,7 @@ module Functions
       raise IndexError, "Neither knowns nor stack have `#{index}` defined!"
     end
   }
+  AllFunctions[:'.'] = Index
 
   IndexKnowns = Function.new(:index_stack){ |results|
     arg_results, index = get_indexes(results)
@@ -46,14 +49,16 @@ module Functions
   }
 
   Display = Function.new(:disp){ |results|
-    to_disp = results.pop
-      puts to_disp.to_s
+    new_knowns = results.clone_knowns
+    results.pop.call(new_knowns)
+    args = new_knowns.stack
+    puts args.pop.to_s
   }
 
   private
 
   def self.get_indexes(results)
-    args = Container.new(stack: [results.delete_at(-2), results.pop])
+    args = Container.new(stack: [results.stack.delete_at(-2), results.pop])
     arg_results = results.clone_knowns
 
     args.call(arg_results)
@@ -63,7 +68,6 @@ module Functions
     container.call(arg_results)
     [arg_results, index]
   end
-  AllFunctions = {'.': Index}
 end
 
 

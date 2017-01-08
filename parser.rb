@@ -30,7 +30,8 @@ module Parser
       c = body.shift
       case c
       when options[:left_paren], options[:right_paren],\
-            options[:get_kw], options[:call_kw], options[:newl_kw]
+            options[:get_kw], options[:call_kw], options[:newl_kw],
+            options[:infix_oper]
         res << c << ''
       when options[:whitespace], options[:linebreak]
         res << '' unless res.last.empty?
@@ -65,7 +66,7 @@ module Parser
         &|\^|\||<<|>>|
         >|<|<=|>=|==|!=|<=>|
         =|\./
-    options[:digit] ||= /[\d]+(?:.\d+)?/
+    options[:digit] ||= /[\d]+(?:\.\d+)?/
 
 
     tokens, knowns = tokenize(body, **options)
@@ -157,7 +158,6 @@ body, args = Parser::parse_all(File.read('code.rb'))
   # :'index' => Functions::Index,
   # :'disp' => Functions::Display,
 # })
-p body
 start_args = args.clone
 body.call(args)
 puts "\n----\n\n"
