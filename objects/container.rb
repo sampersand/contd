@@ -26,7 +26,9 @@ class Container
 
   # ----- Execution ----- #
   def call!
-    result = self.class.new #somehow use knowns here
+    result = Container.new       # DANGEROUS?
+    result.knowns.update(knowns) # DANGEROUS?
+
     @stack.each do |token|
       case token
       when Keyword::Get
@@ -37,7 +39,8 @@ class Container
       when Keyword::Call
         args = result.stack.pop
         func = result.stack.pop
-        func.call(args, result)
+        args = args.(result)  # DANGEROUS
+        func.(args, result) # UNKNOWN IF THIS WORKS
       else
         fail "TODO: Keyeword #{token}" if token.is_a?(Keyword)
         result.stack << token
@@ -97,7 +100,12 @@ if __FILE__ == $0
 
   args = Container.new(knowns: {
     Identifier.new( :x ) => Identifier.new(3),
-    Identifier.new( :+ ) => proc{},
+    Identifier.new( :+ ) => proc{ |args, result|
+      right = args.stack.pop
+      left = args.stack.pop
+      result.stack << left.class.new(left.token + right.token)
+      # args.stack.delete_at(-2) + args.stack.delete_at(-1)
+      },
   })
 
   result = body.call(args)
