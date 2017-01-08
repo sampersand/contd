@@ -1,8 +1,10 @@
 module Operators
+  AllOperators = {}
   class Operator
     def initialize(name, &func)
       @name = name
       @func = func
+      AllOperators[@name] = self
     end
 
     def to_s
@@ -30,13 +32,21 @@ module Operators
 
   class UnaryMethodOperator < Operator
     def call(results)
-      results << results.pop.method(@name).()
+      new_knowns = results.clone_knowns
+      Container.new(stack: [results.stack.delete_at(-2), results.pop]).call(new_knowns)
+      args = new_knowns.stack
+      fail(args.length.to_s) unless args.length == 2
+      results << args[0].method(@name).call(args[1])
     end
   end
 
 
   Assign = Operator.new(:'='){ |results|
-    args = results.pop.stack
+    new_knowns = results.clone_knowns
+      Container.new(stack: [results.stack.delete_at(-2), results.pop]).call(new_knowns)
+    # results.pop.call(new_knowns)
+    args = new_knowns.stack
+
     fail(args.length.to_s) unless args.length == 2
     results[args[0]]=args[1]
   }

@@ -46,7 +46,7 @@ module Functions
 
   Display = Function.new(:disp){ |results|
     to_disp = results.pop
-    puts to_disp.to_s
+      puts to_disp.to_s
   }
 
   private
