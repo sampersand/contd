@@ -22,7 +22,7 @@ class Identifier
   end
 
   def hash
-    @token.hash
+    @token.to_s.hash
   end
   def ==(other)
     self.class == other.class && @token == other.token

@@ -1,10 +1,10 @@
-class Keyword
+require_relative 'identifier'
+class Keyword < Identifier
 
   # ----- Representation ----- #
   def to_s
     self.class.to_s
   end
-  alias :inspect :to_s
 
   def awesome_inspect(options)
     self
