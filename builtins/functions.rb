@@ -55,6 +55,24 @@ module Functions
     puts args.pop.to_s
   }
 
+  Switch = Function.new(:switch){ |results|
+    arg = results.pop
+    arg_knowns = results.clone_knowns
+    arg.call(arg_knowns)
+    switch_on = arg_knowns.pop
+
+    body = results.pop
+    body_knowns = results.clone_knowns
+    body.call(body_knowns)
+
+
+    res = body_knowns.knowns[switch_on]
+    raise "No case `#{args}` found" unless res
+    results << res
+  }
+
+
+
   private
 
   def self.get_indexes(results)
