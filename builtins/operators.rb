@@ -25,35 +25,38 @@ module Operators
   class BinaryMethodOperator < Operator
     def call(results)
       new_knowns = results.clone_knowns
-      results.pop.call(new_knowns)
-      results << new_knowns.stack.reduce(&@name)
+      # results.pop.call(new_knowns)
+      Container.new(stack: [results.stack.delete_at(-2), results.pop]).call(new_knowns) #hacky!
+      args = new_knowns.stack
+      fail(args.length.to_s) unless args.length == 2
+      results << args[0].method(@name).(args[1])
     end
   end
 
   class UnaryMethodOperator < Operator
     def call(results)
       new_knowns = results.clone_knowns
-      Container.new(stack: [results.stack.delete_at(-2), results.pop]).call(new_knowns)
+      results.pop.call(new_knowns)
       args = new_knowns.stack
-      fail(args.length.to_s) unless args.length == 2
-      results << args[0].method(@name).call(args[1])
+      results << args[0].method(@name).()
     end
   end
 
 
   Assign = Operator.new(:'='){ |results|
     new_knowns = results.clone_knowns
-      Container.new(stack: [results.stack.delete_at(-2), results.pop]).call(new_knowns)
     # results.pop.call(new_knowns)
+
+    Container.new(stack: [results.stack.delete_at(-2), results.pop]).call(new_knowns) #hacky!
     args = new_knowns.stack
 
     fail(args.length.to_s) unless args.length == 2
     results[args[0]]=args[1]
   }
   
-  Pos    = BinaryMethodOperator.new :-@
-  Neg    = BinaryMethodOperator.new :+@
-  Invert = BinaryMethodOperator.new :~
+  Pos    = UnaryMethodOperator.new :-@
+  Neg    = UnaryMethodOperator.new :+@
+  Invert = UnaryMethodOperator.new :~
 
   Add    = BinaryMethodOperator.new :+
   Sub    = BinaryMethodOperator.new :-

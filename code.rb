@@ -1,10 +1,12 @@
 #!INCLUDE +
 #!INCLUDE =
+#!INCLUDE .
 
 
-x = 3 + 4 
+# foo = {x! + 4};
+# {x = 4} foo!@;
 
-# (add, ((x!, y!)+!@))=!@
-# ((x, 3)=!@, (y, 5)=!@) add!@
-
-
+car = {
+  wheels = 4
+};
+car! . wheels

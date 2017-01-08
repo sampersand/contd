@@ -12,6 +12,8 @@ module Parser
     func_name = acc[acc.index(' ')+1, acc.length].to_sym
     if Operators::AllOperators.include?(func_name)
       knowns.knowns[func_name] = Operators::AllOperators[func_name]
+    elsif Functions::AllFunctions.include?(func_name)
+      knowns.knowns[func_name] = Functions::AllFunctions[func_name]
     else
       raise "Unknown include `#{func_name}`"
     end
@@ -62,7 +64,7 @@ module Parser
         \+|-|\*|\/|%|\*\*|
         &|\^|\||<<|>>|
         >|<|<=|>=|==|!=|<=>|
-        =/
+        =|\./
     options[:digit] ||= /[\d]+(?:.\d+)?/
 
 
@@ -74,6 +76,7 @@ module Parser
 
   def precedence(o)
     case o
+    when :'.' then 5
     when :** then 4
     when :*, :%, :/ then 3
     when :+, :- then 2
@@ -96,9 +99,9 @@ module Parser
     stack = []
     oper_stack = []
 
-    push_oper = proc{ stack << oper_stack.pop\
-                            << Keyword::Get.new(:get)\
-                            << Keyword::Call.new(:call) } #thrown together
+      push_oper = proc{ stack << oper_stack.pop\
+                              << Keyword::Get.new(:get)\
+                              << Keyword::Call.new(:call) } #thrown together
     until tokens.empty? 
       t = tokens.shift.to_sym
       case t

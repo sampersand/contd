@@ -22,6 +22,7 @@ module Functions
 
   public
   Index = Function.new(:index){ |results|
+    puts results
     arg_results, index = get_indexes(results)
     knowns_has = arg_results.knowns.include?(index)
     index_has = (0...arg_results.stack.length).include?(index)
@@ -52,7 +53,7 @@ module Functions
   private
 
   def self.get_indexes(results)
-    args = results.pop
+    args = Container.new(stack: [results.delete_at(-2), results.pop])
     arg_results = results.clone_knowns
 
     args.call(arg_results)
@@ -62,6 +63,7 @@ module Functions
     container.call(arg_results)
     [arg_results, index]
   end
+  AllFunctions = {'.': Index}
 end
 
 
