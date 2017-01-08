@@ -30,7 +30,8 @@ class Container
         results << val
       when Keyword::Call
         fail if results.stack.empty? 
-        results.pop.call(results)
+        # results.pop.call(results)
+        results.pop(-2).call(results)
       else
         fail "TODO: Keyeword #{token}" if token.is_a?(Keyword)
         results << token

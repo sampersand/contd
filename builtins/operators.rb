@@ -25,8 +25,7 @@ module Operators
   class BinaryMethodOperator < Operator
     def call(results)
       new_knowns = results.clone_knowns
-      # results.pop.call(new_knowns)
-      Container.new(stack: [results.stack.delete_at(-2), results.pop]).call(new_knowns) #hacky!
+      results.pop.call(new_knowns)
       args = new_knowns.stack
       fail(args.length.to_s) unless args.length == 2
       results << args[0].method(@name).(args[1])
@@ -45,9 +44,7 @@ module Operators
 
   Assign = Operator.new(:'='){ |results|
     new_knowns = results.clone_knowns
-    # results.pop.call(new_knowns)
-
-    Container.new(stack: [results.stack.delete_at(-2), results.pop]).call(new_knowns) #hacky!
+    results.pop.call(new_knowns)
     args = new_knowns.stack
 
     fail(args.length.to_s) unless args.length == 2

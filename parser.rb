@@ -12,7 +12,7 @@ class Parser
 
   def parse(body)
     tokens = tokenize(body)
-    parse_tokens(tokens.stack.each)
+    parse_tokens(tokens)
   end
 
   private
@@ -21,7 +21,7 @@ class Parser
     ind = /\s/ =~ result.last
     return unless ind
     token = result.pop[0, ind]
-    result << Identifier.new( token ) unless token.empty?
+    result << token unless token.empty?
     result << ''
   end
 
@@ -30,51 +30,57 @@ class Parser
     body = body.each_char
     loop do
       result.last += body.next
+
+      if result.last[-1] == '#' #this right here is very hacky!
+        nil until body.next == "\n"
+        result.last = result.last[0, result.last.length - 1] 
+      end
+
       split = tokenize_handle_result(result)
     end
     result.pop if result.last.empty?
-    result << Identifier.new( result.pop ) unless result.last.is_a?( Identifier )
-    fail unless result.stack.each{ |e| e.is_a?( Identifier ) && e.token.is_a?(String) }
     result
   end
 
   def parse_tokens(tokens)
     stack = Container.new
     opers = Container.new
-    loop do 
-      case(token = tokens.next)
-      when operator? then 0
-      when left_paren? then stack << parse_tokens(tokens)
-      when right_paren? then break
-      when keyword? then stack << create_keyword(token)
-      else stack << token
-      end
+    until tokens.stack.empty?
+      token = tokens.shift
+      stack << (operator(token, stack, opers) ||
+                left_paren(token, tokens) || 
+                (right_paren(token, tokens) && break) || 
+                keyword(token) ||
+                number(token) || 
+                Identifier.new( token ) )
     end
     stack
   end
 
-  def operator?
-    lambda do |t|
-      nil
+  def operator(token, stack, opers)
+    /\+/ =~ token and Identifier.new( token )
+  end
+
+  def right_paren(token, tokens)
+    /[)}\]]/ =~ token
+  end
+
+  def left_paren(token, tokens)
+    return unless /[({\[]/ =~ token
+    parse_tokens(tokens)
+  end
+
+  def keyword(token)
+    case token
+    when /!/ then Keyword::Get.new( token )
+    when /@/ then Keyword::Call.new( token )
+    else nil
     end
   end
 
-  def right_paren?
-    lambda do |t|
-      /[)}\]]/ =~ t.token
-    end
-  end
-
-  def left_paren?
-    lambda do |t|
-      /[({\[]/ =~ t.token
-    end
-  end
-
-  def keyword?
-    lambda do |t|
-      nil
-    end
+  def number(token)
+    return unless /\d+/ =~ token
+    token.to_f
   end
 
 end
@@ -88,5 +94,19 @@ end
 
 parser = Parser.new
 body = parser.parse(File.read('code.rb'))
+args = Container.new
+args.knowns[Identifier.new( '+' )] = Operators::Add
 p body.stack
+res = body.call(args)
+p res
+
+
+
+
+
+
+
+
+
+
 
