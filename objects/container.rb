@@ -2,53 +2,33 @@ class Container
 
   # ----- Attributes ----- #
   attr_reader :stack
-  attr_reader :locals
-  attr_reader :globals
+  attr_reader :knowns
 
   # ----- Initializer ----- #
-  def initialize(stack: nil, locals: nil, globals: nil)
-    @stack  = stack || []
-    @locals = locals || {}
-    @globals = globals || {}
-    fail unless @stack.respond_to?(:each)
-    fail unless @stack.respond_to?(:pop)
-    fail unless @stack.respond_to?(:push)
-    fail unless @locals.respond_to?(:[])
-    fail unless @locals.respond_to?(:[]=)
-    fail unless @globals.respond_to?(:[])
-    fail unless @globals.respond_to?(:[]=)
-
+  def initialize(stack: [], knowns: {})
+    @stack  = stack
+    @knowns = knowns
+    fail unless stack.respond_to?(:each)
+    fail unless stack.respond_to?(:pop)
+    fail unless stack.respond_to?(:push)
+    fail unless knowns.respond_to?(:[])
+    fail unless knowns.respond_to?(:[]=)
   end
 
 
-  # ----- Indexing ----- #
-  def [](val)
-    @locals[val] || @globals[val]
-  end
-  def <<(val)
-    @stack << val
-  end
-  def pop
-    @stack.pop
-  end
 
   # ----- Execution ----- #
-  def call(result)
-    # result = Container.new       # DANGEROUS?
-    # result.locals.update(locals) # DANGEROUS?
-
+  def call!(result)
     @stack.each do |token|
       case token
       when Keyword::Get
         key = result.pop
-        val = self[key]
+        val = result.knowns[key]
         raise NameError, "Unknown token: #{key.inspect}" unless val
         result << val
       when Keyword::Call
-        args = result.pop
         func = result.pop
-        args = args.(result)  # DANGEROUS
-        func.(args, result) # UNKNOWN IF THIS WORKS
+        func.call(result) # UNKNOWN IF THIS WORKS
       else
         fail "TODO: Keyeword #{token}" if token.is_a?(Keyword)
         result << token
@@ -57,19 +37,31 @@ class Container
     result
   end
 
-  def execute(args)
-    result = self.class.new(globals: @globals.clone
+  def call(args)
+    call!(args.clone_knowns)
+  end
 
-                            )
-    puts result
-    #something funky might go on here with locals
-    exit
-    merge_globals(args).call!
+  # ----- cloning ---- #
+  def clone_knowns
+    self.class.new(stack: @stack, knowns: @knowns.clone)
+  end
+
+  # ----- Accessing ----- #
+  def <<(ele) 
+    @stack << ele
+  end
+
+  def pop(num=nil)
+    return @stack.pop unless num
+    @stack.delete_at(num)
   end
 
   # ----- Representation ----- #
   def to_s
-    "(#{stack_str}, #{locals_str}, #{globals_str})"
+    return "()" if @stack.empty? && @knowns.empty?
+    return knowns_str if @stack.empty?
+    return stack_str if @knowns.empty?
+    "(#{stack_str}, #{knowns_str})"
   end
 
   def inspect
@@ -79,93 +71,18 @@ class Container
   def stack_str
     "[#{@stack.join(', ')}]"
   end
-  def globals_str
-    globalz = globals.reject{ |_, v| v.is_a?(Proc)}
-    "{#{globalz.collect{|k, v| "#{k}: #{v}"}.join(', ')}}"
+
+  def knowns_str
+    "{#{@knowns.collect{|k, v| "#{k}: #{v}"}.join(', ')}}"
   end
 
-  def locals_str
-    "{#{@locals.collect{|k, v| "#{k}: #{v}"}.join(', ')}}"
+  def ai(options)
+    awesome_inspect(options).ai(options)
   end
+
+  def awesome_inspect(options)
+    @stack.collect{ |ele| ele.awesome_inspect(options) }
+  end
+
 end
-
-
-if __FILE__ == $0
-  require_relative 'keyword'
-  require_relative 'identifier'
-  body = Container.new(stack: [
-    Identifier.new( :+ ),
-    Keyword::Get.new,
-    Container.new(stack: [
-      Identifier.new( :x ),
-      Keyword::Get.new,
-      Identifier.new(  2 ),
-    ]),
-    Keyword::Call.new
-  ])
-
-  args = Container.new(
-    locals:
-      {
-        Identifier.new( :x ) => Identifier.new(3),
-      },
-    globals:
-      {
-        Identifier.new( :+ ) => proc{ |args, result|
-          right = args.stack.pop
-          left = args.stack.pop
-          result.stack << left.class.new(left.token + right.token)
-        },
-      }
-  )
-
-  result = body.call(args)
-
-  p result
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
