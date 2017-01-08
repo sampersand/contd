@@ -3,27 +3,28 @@ require_relative 'objects/container'
 require_relative 'objects/identifier'
 require_relative 'builtins/operators'
 
+GET = Keyword::Get.new
+CALL = Keyword::Call.new
+NEWL = Keyword::Newline.new
+def stack(*args) Container.new(stack: args) end
 body = Container.new(stack: [
-  # Container.new(stack: [
-    Identifier.new( :x ),
-    Keyword::Get.new,
-    Identifier.new(  2 ),
-  # ]),
-  Identifier.new( :+ ),
-  Keyword::Get.new,
-  Keyword::Call.new
+  # stack(:foo, stack(stack(:x, GET, 2), :+, GET, CALL)), :set, GET, CALL,
+  # stack(stack(:x, 4), :set, GET, CALL), :foo, GET, CALL,
+  
+  stack(stack(:x, 4), :set, GET, CALL),
+  stack(stack(:x, GET, 2), :+, GET, CALL), CALL,
+
 ])
 
 args = Container.new(knowns: {
-  Identifier.new( :x ) => Identifier.new(3),
-  Identifier.new( :+ ) => Operators::Add,
+  :+   => Operators::Add,
+  :set => Operators::Assign,
+  # :foo => stack(:x, GET, 2, :+, GET, CALL)
 })
 result = body.call(args)
-
 require 'ap'
 ap result, index: false
-
-
+p result.knowns
 
 
 

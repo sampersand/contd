@@ -11,5 +11,6 @@ class Keyword
   end
 end
 
-Keyword::Call = Class.new(Keyword)
-Keyword::Get  = Class.new(Keyword)
+Keyword::Call     = Class.new(Keyword)
+Keyword::Get      = Class.new(Keyword)
+Keyword::Newline  = Class.new(Keyword)
