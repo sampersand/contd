@@ -6,20 +6,19 @@
 #!INCLUDE disp
 #!INCLUDE switch
 
-
-car = {
+Car = {
   wheels = 4;
   doors = 2;
   mpg = 25;
   maker = 'honda';
+  calculate_gas = {
+    mph! * time! / Car!.mpg;
+  };
 };
-calculate_gas = {
-  mph! * time! / car!.mpg
-};
-{mph=3; time=4} calculate_gas!@
-# (car!.maker) disp!@
 
-
+get_gas = Car!.calculate_gas;
+{mph=3; time=4}get_gas!@;
+{mph=3; time=4}()(Car!.calculate_gas)@@;
 
 
 # 10 m/h 

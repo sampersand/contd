@@ -48,6 +48,7 @@ module Functions
     results << arg_results.stack[index.to_i]
   }
 
+
   Display = Function.new(:disp){ |results|
     new_knowns = results.clone_knowns
     results.pop.call(new_knowns)

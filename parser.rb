@@ -1,131 +1,74 @@
 
-module Parser
+class Parser
   require_relative 'objects/keyword'
   require_relative 'objects/identifier'
   require_relative 'objects/container'
   require_relative 'builtins/operators'
   require_relative 'builtins/functions'
 
-  module_function
+  def initialize(**options)
+    @options = options
+  end
 
-  def handle_include(acc, knowns)
-    func_name = acc[acc.index(' ')+1, acc.length].to_sym
-    if Operators::AllOperators.include?(func_name)
-      knowns.knowns[func_name] = Operators::AllOperators[func_name]
-    elsif Functions::AllFunctions.include?(func_name)
-      knowns.knowns[func_name] = Functions::AllFunctions[func_name]
-    else
-      raise "Unknown include `#{func_name}`"
+  def parse(body)
+    tokens = tokenize(body)
+    parse_tokens(tokens, options)
+  end
+
+  private
+
+  def tokenize_handle_result(result) # TODO: MAKE THIS WORK WITH 1+2
+    ind = /\s/ =~ result.last
+    return unless ind
+
+    token = result.pop[0, ind]
+    result << Identifier.new( token ) unless token.empty?
+    result << ''
+  end
+
+  def tokenize(body)
+    result = Container.new(stack: [''])
+    body = body.each_char
+    loop do
+      result.last += body.next
+      split = tokenize_handle_result(result)
     end
-    # :+     => Operators::Add,
+    result.pop if result.last.empty?
+    result << Identifier.new( result.pop )
+    fail unless result.stack.each{ |e| e.is_a?( Identifier ) }
+    p result.stack
+    exit
+    result
   end
 
-  def tokenize(body, **options)
-
-    res = ['']
-    knowns = Container.new
-    body = body.each_char.to_a
-
-    until body.empty?
-      c = body.shift
-      case c
-      when options[:left_paren], options[:right_paren],\
-            options[:get_kw], options[:call_kw], options[:newl_kw],
-            options[:infix_oper]
-        res << c << ''
-      when options[:whitespace], options[:linebreak]
-        res << '' unless res.last.empty?
-      when options[:comment]
-        acc = c
-        acc << body.shift until options[:linebreak] =~ body.first || body.empty?
-        if (acc =~ options[:include]) == 0
-          handle_include(acc, knowns)
-        end
-      else
-        res[-1] += c
-      end
-    end
-    [res.reject(&:empty?), knowns]
+  def parse_tokens(tokens)
+    # stack = Container.new
+    # opers = []
+    # until tokens.empty?
+    #   case (token = tokens.shift)
+    #   when options[:operator]
+    #   when options[:parenthesis]
+    #   when options[:keyword]
+    #     stack << create_keyword(token, options)
+    #   else
+    #     stack << create_identifier(token, options)
+    #   end
+    # end
+    # stack << opers.pop until opers.empty?
+    # stack
   end
 
-  def parse_all(body, **options)
 
-
-    options[:whitespace] ||= /[\s,]/
-    options[:parens]  ||= /[(){}\[\]]/
-    options[:comment] ||= /#/
-    options[:include] ||= /#!INCLUDE/
-    options[:linebreak] ||= /[;\n]/
-    options[:newl_kw] ||= /;/
-    options[:get_kw] ||= /[!]/
-    options[:call_kw] ||= /[@]/
-    options[:left_paren] ||= /[({\[]/
-    options[:right_paren] ||= /[)}\]]/
-    options[:infix_oper] ||= /(?x)
-        \+|-|\*|\/|%|\*\*|
-        &|\^|\||<<|>>|
-        >|<|<=|>=|==|!=|<=>|
-        =|\./
-    options[:digit] ||= /\d+/
-
-
-    tokens, knowns = tokenize(body, **options)
-    res = parse(tokens, **options)
-
-    [res, knowns]
-  end
-
-  def precedence(o)
-    case o
-    when :'.' then 5
-    when :** then 4
-    when :*, :%, :/ then 3
-    when :+, :- then 2
-    when :<, :>, :<=, :>=, :==, :'!=', :<=> then 1
-    when :'=' then 0
-    else raise "Unknown precedence for operator `#{o}`"
-    end
-  end
-
-  def associativity(o)
-    return :left unless o == :**
-    :right
-  end
-
-  def parse(tokens, **options)
-
-    # +-*/ ** % << >> & | ^ ~ 
-    # +-*/ % & | ^
-
-    stack = []
-    oper_stack = []
-
-      push_oper = proc{ stack << oper_stack.pop\
-                              << Keyword::Get.new(:get)\
-                              << Keyword::Call.new(:call) } #thrown together
-    until tokens.empty? 
-      t = tokens.shift.to_sym
-      case t
-      when options[:infix_oper]
-        push_oper.() while !oper_stack.empty? &&(
-            associativity(t) == :left && precedence(t) <= precedence(oper_stack.last) || 
-            associativity(t) == :right && precedence(t) < precedence(oper_stack.last))
-        oper_stack << t
-      when options[:left_paren] then stack << parse(tokens, **options)
-      when options[:right_paren] then break
-      when options[:get_kw] then stack << Keyword::Get.new( t )
-      when options[:call_kw] then stack << Keyword::Call.new( t )
-      when options[:newl_kw] then push_oper.() until oper_stack.empty?
-      when options[:digit] then stack << t.to_s.to_f
-      else stack << t
-      end
-    end
-    push_oper.() until oper_stack.empty?
-    Container.new(stack: stack)
-
-  end
 end
 
 
 
+
+
+
+
+
+
+parser = Parser.new
+body, args = parser.parse(File.read('code.rb'))
 

@@ -78,6 +78,22 @@ class Container
     @knowns.keys
   end
 
+  def last
+    @stack.last
+  end
+
+  def first
+    @stack.first
+  end
+
+  def last=(val)
+    @stack[-1] = val
+  end
+
+  def first=(val)
+    @stack[0] = val
+  end
+
   # ----- Representation ----- #
   def to_s
     return "()" if @stack.empty? && @knowns.empty?
