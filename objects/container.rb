@@ -81,30 +81,30 @@ class Container
 end
 
 
-
-require_relative 'keyword'
-require_relative 'identifier'
-body = Container.new(stack: [
-  Identifier.new( :+ ),
-  Keyword::Get.new,
-  Container.new(stack: [
-    Identifier.new( :x ),
+if __FILE__ == $0
+  require_relative 'keyword'
+  require_relative 'identifier'
+  body = Container.new(stack: [
+    Identifier.new( :+ ),
     Keyword::Get.new,
-    Identifier.new(  2 ),
-  ]),
-  Keyword::Call.new
-])
+    Container.new(stack: [
+      Identifier.new( :x ),
+      Keyword::Get.new,
+      Identifier.new(  2 ),
+    ]),
+    Keyword::Call.new
+  ])
 
-args = Container.new(knowns: {
-  Identifier.new( :x ) => Identifier.new(3),
-  Identifier.new( :+ ) => proc{},
-})
+  args = Container.new(knowns: {
+    Identifier.new( :x ) => Identifier.new(3),
+    Identifier.new( :+ ) => proc{},
+  })
 
-result = body.call(args)
+  result = body.call(args)
 
-require 'ap'
-ap result, index: false
-
+  require 'ap'
+  ap result, index: false
+end
 
 
 
