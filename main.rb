@@ -15,8 +15,8 @@ body = stack(
   # *set(:x, stack(1, 2, 3, *set(9, 3) )),
   # *stack(:x, GET, Identifier.new(0)), *func(:index_stack),
   # *set(:x, stack( *set(9, 3) )),
-  *set(:x, stack( :y, GET, 3 ) ),
-  *stack(*set(:y, 4), :x, GET, 0), *func(:index_stack)
+  *set(:x, stack( :y, GET, 3, *set(2, 0), 3, ) ),
+  *stack(*set(:y, 4), :x, GET, 2), *func(:index)
 )
 
 args = Container.new(knowns: {
@@ -25,6 +25,7 @@ args = Container.new(knowns: {
   :'cmp' => Operators::Compare,
   :'index_stack' => Functions::IndexStack,
   :'index_knowns' => Functions::IndexKnowns,
+  :'index' => Functions::Index,
 })
 start_args = args.clone
 body.call(args)
