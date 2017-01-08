@@ -11,6 +11,13 @@ class Container
   end
 
 
+  # ----- Cloning ----- #
+  def deep_clone
+    new_stack = @stack.collect{ |e| }
+
+    self.class.new(stack: new_stack, knowns: new_knowns)
+  end
+
   # ----- Execution ----- #
   def execute(args)
     clone.execute!
