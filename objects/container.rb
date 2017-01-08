@@ -70,6 +70,14 @@ class Container
     @stack.delete_at(num)
   end
 
+  def shift
+    @stack.shift
+  end
+  def unshift(ele)
+    @stack.unshift(ele)
+  end
+
+
   def []=(key, value)
     @knowns[key] = value
   end

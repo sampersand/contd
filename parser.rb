@@ -12,7 +12,7 @@ class Parser
 
   def parse(body)
     tokens = tokenize(body)
-    parse_tokens(tokens, options)
+    parse_tokens(tokens)
   end
 
   private
@@ -20,7 +20,6 @@ class Parser
   def tokenize_handle_result(result) # TODO: MAKE THIS WORK WITH 1+2
     ind = /\s/ =~ result.last
     return unless ind
-
     token = result.pop[0, ind]
     result << Identifier.new( token ) unless token.empty?
     result << ''
@@ -36,14 +35,14 @@ class Parser
     result.pop if result.last.empty?
     result << Identifier.new( result.pop )
     fail unless result.stack.each{ |e| e.is_a?( Identifier ) }
-    p result.stack
-    exit
     result
   end
 
   def parse_tokens(tokens)
-    # stack = Container.new
-    # opers = []
+    stack = Container.new
+    opers = Container.new
+    p tokens.stack
+    exit
     # until tokens.empty?
     #   case (token = tokens.shift)
     #   when options[:operator]
