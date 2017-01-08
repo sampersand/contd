@@ -66,7 +66,7 @@ module Parser
         &|\^|\||<<|>>|
         >|<|<=|>=|==|!=|<=>|
         =|\./
-    options[:digit] ||= /[\d]+(?:\.\d+)?/
+    options[:digit] ||= /\d+/
 
 
     tokens, knowns = tokenize(body, **options)
