@@ -12,7 +12,7 @@ class Parser
 
   def parse(body)
     tokens = tokenize(body)
-    parse_tokens(tokens)
+    parse_tokens(tokens.stack.each)
   end
 
   private
@@ -33,30 +33,49 @@ class Parser
       split = tokenize_handle_result(result)
     end
     result.pop if result.last.empty?
-    result << Identifier.new( result.pop )
-    fail unless result.stack.each{ |e| e.is_a?( Identifier ) }
+    result << Identifier.new( result.pop ) unless result.last.is_a?( Identifier )
+    fail unless result.stack.each{ |e| e.is_a?( Identifier ) && e.token.is_a?(String) }
     result
   end
 
   def parse_tokens(tokens)
     stack = Container.new
     opers = Container.new
-    puts tokens
-    exit
-    # until tokens.empty?
-    #   case (token = tokens.shift)
-    #   when options[:operator]
-    #   when options[:parenthesis]
-    #   when options[:keyword]
-    #     stack << create_keyword(token, options)
-    #   else
-    #     stack << create_identifier(token, options)
-    #   end
-    # end
-    # stack << opers.pop until opers.empty?
-    # stack
+    loop do 
+      case(token = tokens.next)
+      when operator? then 0
+      when left_paren? then stack << parse_tokens(tokens)
+      when right_paren? then break
+      when keyword? then stack << create_keyword(token)
+      else stack << token
+      end
+    end
+    stack
   end
 
+  def operator?
+    lambda do |t|
+      nil
+    end
+  end
+
+  def right_paren?
+    lambda do |t|
+      /[)}\]]/ =~ t.token
+    end
+  end
+
+  def left_paren?
+    lambda do |t|
+      /[({\[]/ =~ t.token
+    end
+  end
+
+  def keyword?
+    lambda do |t|
+      nil
+    end
+  end
 
 end
 
@@ -67,7 +86,7 @@ end
 
 
 
-
 parser = Parser.new
-body, args = parser.parse(File.read('code.rb'))
+body = parser.parse(File.read('code.rb'))
+p body.stack
 
