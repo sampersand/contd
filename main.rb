@@ -3,29 +3,42 @@ require_relative 'objects/container'
 require_relative 'objects/identifier'
 
 def id(val) Identifier.new( val ) end
-body = [
-  id(:+),
-  [
-    id(1),
-    id(2),
-  ],
+body = Container.new(stack: [
+  Identifier.new( :+ ),
+  Container.new(stack: [
+    Identifier.new( :x ),
+    Identifier.new(  2 ),
+  ]),
   Keyword::Call.new
-]
-new_body = Container::from body
-
+])
+args = Container.new(knowns: {
+  Identifier.new( :+ ) => Identifier.new( 3)
+})
+body.execute(args)
 
 require 'ap'
-ap new_body, index: false
+ap body, index: false
 
 
 
-  # Identifier.new(token: :a),
-  # Container.new(stack: [
-  #   Identifier.new(token: :b),
-  #   Container.new(stack: [
-  #     Identifier.new(token: :c),
-  #     Identifier.new(token: :d),
-  #   ]),
-  #   Identifier.new(token: :e),
-  # ]),
-  # Keyword::Call.new,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

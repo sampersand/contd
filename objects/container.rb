@@ -4,22 +4,6 @@ class Container
   attr_reader :stack
   attr_reader :knowns
 
-  # ----- Class Methods ----- #
-  def self.from(body)
-    container = new
-    body.each do |token|
-      case token
-      when Keyword
-        #...
-      else 
-        container << token
-      end
-    end
-    p container
-    container
-  end
-
-
   # ----- Initializer ----- #
   def initialize(stack: [], knowns: {})
     @stack  = stack
@@ -27,7 +11,13 @@ class Container
   end
 
 
-  # ----- Accessors ----- #
+  # ----- Execution ----- #
+  def execute(args)
+    clone.execute!
+  end
+
+
+  # ----- Setters ----- #
   def <<(obj)
     @stack << obj
   end
@@ -67,26 +57,4 @@ class Container
 end
 
 
-
-
-
-
-
-require_relative 'keyword'
-require_relative 'identifier'
-
-def id(val) Identifier.new( val ) end
-body = [
-  :+,
-  [
-    id(1),
-    id(2),
-  ],
-  Keyword::Call.new
-]
-new_body = Container::from body
-
-
-require 'ap'
-ap new_body, index: false
 
