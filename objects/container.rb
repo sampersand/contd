@@ -104,7 +104,6 @@ if __FILE__ == $0
       right = args.stack.pop
       left = args.stack.pop
       result.stack << left.class.new(left.token + right.token)
-      # args.stack.delete_at(-2) + args.stack.delete_at(-1)
       },
   })
 
@@ -113,29 +112,5 @@ if __FILE__ == $0
   require 'ap'
   ap result, index: false
 end
-
-
-
-
-
-
-[
-  x =
-
-
-]
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
