@@ -29,21 +29,25 @@ module Functions
       raise IndexError, "Both knowns and stack have `#{index}` defined!" if index_has
       results << arg_results.knowns[index]
     elsif index_has
-      results << arg_results.stack[index]
+      results << arg_results.stack[index.to_i]
     else
       raise IndexError, "Neither knowns nor stack have `#{index}` defined!"
     end
   }
 
-  IndexStack = Function.new(:index_stack){ |results|
-    arg_results, index = get_indexes(results)
-    results << arg_results.stack[index]
-  }
   IndexKnowns = Function.new(:index_stack){ |results|
     arg_results, index = get_indexes(results)
     results << arg_results.knowns[index]
   }
+  IndexStack = Function.new(:index_stack){ |results|
+    arg_results, index = get_indexes(results)
+    results << arg_results.stack[index.to_i]
+  }
 
+  Display = Function.new(:disp){ |results|
+    to_disp = results.pop
+    puts to_disp.to_s
+  }
 
   private
 

@@ -16,7 +16,7 @@ body = stack(
   # *stack(:x, GET, Identifier.new(0)), *func(:index_stack),
   # *set(:x, stack( *set(9, 3) )),
   *set(:x, stack( :y, GET, 3, *set(2, 0), 3, ) ),
-  *stack(*set(:y, 4), :x, GET, 2), *func(:index)
+  *stack(*set(:y, 4), :x, GET, 0), *func(:index), *func(:disp)
 )
 
 args = Container.new(knowns: {
@@ -26,6 +26,7 @@ args = Container.new(knowns: {
   :'index_stack' => Functions::IndexStack,
   :'index_knowns' => Functions::IndexKnowns,
   :'index' => Functions::Index,
+  :'disp' => Functions::Display,
 })
 start_args = args.clone
 body.call(args)
