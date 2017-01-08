@@ -48,16 +48,6 @@ module Functions
     results << arg_results.stack[index.to_i]
   }
 
-
-  SetIndexKnowns = Function.new(:index_stack){ |results|
-    arg_results, index, value = get_indexes_value(results)
-    arg_results.knowns[index] = value
-  }
-  SetIndexStack = Function.new(:index_stack){ |results|
-    arg_results, index, value = get_indexes_value(results)
-    arg_results.stack[index] = value
-  }
-
   Display = Function.new(:disp){ |results|
     new_knowns = results.clone_knowns
     results.pop.call(new_knowns)
@@ -90,21 +80,6 @@ module Functions
     arg_results = results.clone_knowns
 
     args.call(arg_results)
-    index = arg_results.pop
-    container = arg_results.pop
-
-    container.call(arg_results)
-    [arg_results, index]
-  end
-
-  def self.get_indexes_value(results)
-    args = Container.new(stack: [results.stack.delete_at(-3), 
-                                 results.stack.delete_at(-2),
-                                 results.pop])
-    arg_results = results.clone_knowns
-
-    args.call(arg_results)
-    value = arg_results.pop
     index = arg_results.pop
     container = arg_results.pop
 

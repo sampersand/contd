@@ -17,6 +17,8 @@ Car = {
   };
 };
 
+get_gas = Car!.calculate_gas;
+{mph=3; time=4}get_gas!@;
 {mph=3; time=4}()(Car!.calculate_gas)@@;
 
 
