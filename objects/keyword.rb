@@ -12,3 +12,4 @@ class Keyword
 end
 
 Keyword::Call = Class.new(Keyword)
+Keyword::Get  = Class.new(Keyword)

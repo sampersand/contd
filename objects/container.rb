@@ -8,29 +8,46 @@ class Container
   def initialize(stack: [], knowns: {})
     @stack  = stack
     @knowns = knowns
+    fail unless stack.respond_to?(:each)
+    fail unless stack.respond_to?(:pop)
+    fail unless stack.respond_to?(:push)
+    fail unless knowns.respond_to?(:[])
+    fail unless knowns.respond_to?(:[]=)
   end
 
 
-  # ----- Cloning ----- #
-  def deep_clone
-    new_stack = @stack.collect{ |e| }
-
-    self.class.new(stack: new_stack, knowns: new_knowns)
+  # ----- merging ----- #
+  
+  def merge_knowns(other)
+    # possibly dangerous with the cloning fun stuff :P
+    self.class.new(stack: @stack,
+                   knowns: @knowns.clone.update(other.knowns))
   end
 
   # ----- Execution ----- #
-  def execute(args)
-    clone.execute!
+  def call!
+    result = self.class.new #somehow use knowns here
+    @stack.each do |token|
+      case token
+      when Keyword::Get
+        key = result.stack.pop
+        val = knowns[key]
+        raise NameError, "Unknown token: #{key.inspect}" unless val
+        result.stack << val
+      when Keyword::Call
+        args = result.stack.pop
+        func = result.stack.pop
+        func.call(args, result)
+      else
+        fail "TODO: Keyeword #{token}" if token.is_a?(Keyword)
+        result.stack << token
+      end
+    end
+    result
   end
 
-
-  # ----- Setters ----- #
-  def <<(obj)
-    @stack << obj
-  end
-
-  def []=(key, obj)
-    @knowns[key] = obj
+  def call(args)
+    merge_knowns(args).call!
   end
 
   # ----- Representation ----- #
@@ -62,6 +79,45 @@ class Container
   end
 
 end
+
+
+
+require_relative 'keyword'
+require_relative 'identifier'
+body = Container.new(stack: [
+  Identifier.new( :+ ),
+  Keyword::Get.new,
+  Container.new(stack: [
+    Identifier.new( :x ),
+    Keyword::Get.new,
+    Identifier.new(  2 ),
+  ]),
+  Keyword::Call.new
+])
+
+args = Container.new(knowns: {
+  Identifier.new( :x ) => Identifier.new(3),
+  Identifier.new( :+ ) => proc{},
+})
+
+result = body.call(args)
+
+require 'ap'
+ap result, index: false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
