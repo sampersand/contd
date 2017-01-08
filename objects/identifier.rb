@@ -5,6 +5,10 @@ class Identifier
   end
 
   # ----- Representation ----- #
+  def to_i
+    @token.to_s.to_i
+  end
+
   def to_s
     @token.to_s
   end
@@ -16,7 +20,6 @@ class Identifier
   def awesome_inspect(options)
     self
   end
-
 
   def hash
     @token.hash

@@ -116,39 +116,3 @@ end
 
 
 
-
-
-require_relative 'keyword'
-require_relative 'identifier'
-require_relative '../builtins/operators'
-
-GET = Keyword::Get.new
-CALL = Keyword::Call.new
-NEWL = Keyword::Newline.new
-def stack(*args) Container.new(stack: args) end
-def func(id) [id, GET, CALL] end
-body = stack(
-    stack(:foo, stack( stack(:x, GET, 4), *func(:+) )), *func(:'='),
-    stack(
-    stack(stack(:x, 9), *func(:'=')), *func(:foo),
-    stack(stack(:x, 4), *func(:'=')), *func(:foo),
-    ),
-    *func(:+),
-)
-
-args = Container.new(stack: [], knowns: {
-  :+   => Operators::Add,
-  :'=' => Operators::Assign,
-  # :foo => stack(:x, GET, 2, :+, GET, CALL)
-})
-body.call(args)
-require 'ap'
-ap args.stack
-ap args.knowns
-
-
-
-
-
-
-

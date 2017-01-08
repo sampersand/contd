@@ -37,7 +37,7 @@ module Operators
 
   Assign = Operator.new(:'='){ |results|
     args = results.pop.stack
-    fail unless args.length == 2
+    fail(args.length.to_s) unless args.length == 2
     results[args[0]]=args[1]
   }
   
