@@ -18,37 +18,43 @@ class Container
 
 
   # ----- Execution ----- #
-  def call!(result)
+  def execute(results)
     @stack.each do |token|
       case token
       when Keyword::Newline
-        result.pop
+        results.pop
       when Keyword::Get
-        key = result.pop
-        val = result.knowns[key]
+        key = results.pop
+        val = results.knowns[key]
         raise NameError, "Unknown token: #{key.inspect}" unless val
-        result << val
+        results << val
       when Keyword::Call
-        result.pop
-        call(result) # UNKNOWN IF THIS WORKS
+        fail if results.stack.empty? 
+        results.pop.call(results)
       else
         fail "TODO: Keyeword #{token}" if token.is_a?(Keyword)
-        result << token
+        results << token
       end
     end
-    result
   end
 
   def call(results)
-    call!(clone_knowns)
-  end
-  def execute
-    call(clone_knowns)
+    if results.stack.empty?
+      execute(results)
+      return
+    end
+    args = results.pop
+    args.call(results)
+    execute(results)
   end
 
   # ----- cloning ---- #
   def clone_knowns
     self.class.new(stack: nil, knowns: @knowns.clone)
+  end
+
+  def clone
+    self.class.new(stack: @stack.clone, knowns: @knowns.clone)
   end
 
   # ----- Accessing ----- #
@@ -61,10 +67,13 @@ class Container
     @stack.delete_at(num)
   end
 
-  def []=(key, value )
+  def []=(key, value)
     @knowns[key] = value
   end
 
+  def keys
+    @knowns.keys
+  end
 
   # ----- Representation ----- #
   def to_s
@@ -114,24 +123,24 @@ GET = Keyword::Get.new
 CALL = Keyword::Call.new
 NEWL = Keyword::Newline.new
 def stack(*args) Container.new(stack: args) end
-body = Container.new(stack: [
-  # stack(:foo, stack(stack(:x, GET, 2), :+, GET, CALL)), :set, GET, CALL,
-  # stack(stack(:x, 4), :set, GET, CALL), :foo, GET, CALL,
-  
-  stack(), stack(stack(:x, 4), :set, GET, CALL), CALL
-  # stack(stack(:x, GET, 2), :+, GET, CALL), CALL,
+def func(id) [id, GET, CALL] end
+body = stack(
+    stack(:foo, stack( stack(:x, GET, 4), *func(:+) )), *func(:'='),
+    stack(stack(:x, 9), *func(:'=')), *func(:foo),
+)
 
-])
-
-args = Container.new(knowns: {
+args = Container.new(stack: [], knowns: {
   :+   => Operators::Add,
-  :set => Operators::Assign,
+  :'=' => Operators::Assign,
   # :foo => stack(:x, GET, 2, :+, GET, CALL)
 })
-result = body.execute(args)
+body.call(args)
 require 'ap'
-ap result, index: false
-p result.knowns
+ap args.stack
+ap args.knowns
+
+
+
 
 
 

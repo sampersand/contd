@@ -22,10 +22,9 @@ module Operators
 
   class BinaryMethodOperator < Operator
     def call(results)
-      popped = results.pop
-      res2 = popped.call(results.clone_knowns)
-      results << res2.stack.reduce(&@name)
-      # results << results.pop(-2).method(@name).(results.pop)
+      new_knowns = results.clone_knowns
+      results.pop.call(new_knowns)
+      results << new_knowns.stack.reduce(&@name)
     end
   end
 
@@ -37,7 +36,9 @@ module Operators
 
 
   Assign = Operator.new(:'='){ |results|
-    results.[]=(*results.pop.stack)
+    args = results.pop.stack
+    fail unless args.length == 2
+    results[args[0]]=args[1]
   }
   
   Pos    = BinaryMethodOperator.new :-@
