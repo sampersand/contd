@@ -43,9 +43,12 @@ class Container
       execute(results)
       return
     end
+    new_results = results.clone_knowns
     args = results.pop
-    args.call(results)
-    execute(results)
+    args.call(new_results)
+    execute(new_results)
+    results << new_results.pop
+
   end
 
   # ----- cloning ---- #
@@ -126,7 +129,11 @@ def stack(*args) Container.new(stack: args) end
 def func(id) [id, GET, CALL] end
 body = stack(
     stack(:foo, stack( stack(:x, GET, 4), *func(:+) )), *func(:'='),
+    stack(
     stack(stack(:x, 9), *func(:'=')), *func(:foo),
+    stack(stack(:x, 4), *func(:'=')), *func(:foo),
+    ),
+    *func(:+),
 )
 
 args = Container.new(stack: [], knowns: {
