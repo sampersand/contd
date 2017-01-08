@@ -8,4 +8,4 @@
 # {x = 4} foo!@;
 
 car = {wheels = 4; 3};
-(car!.0) disp!@
+disp!@(car!.0)
