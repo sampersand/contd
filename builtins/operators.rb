@@ -23,7 +23,7 @@ module Operators
   class BinaryMethodOperator < Operator
     def call(results)
       popped = results.pop
-    res2 = popped.call(results.clone_knowns)
+      res2 = popped.call(results.clone_knowns)
       results << res2.stack.reduce(&@name)
       # results << results.pop(-2).method(@name).(results.pop)
     end

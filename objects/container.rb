@@ -29,7 +29,8 @@ class Container
         raise NameError, "Unknown token: #{key.inspect}" unless val
         result << val
       when Keyword::Call
-        result.pop.call(result) # UNKNOWN IF THIS WORKS
+        result.pop
+        call(result) # UNKNOWN IF THIS WORKS
       else
         fail "TODO: Keyeword #{token}" if token.is_a?(Keyword)
         result << token
@@ -38,9 +39,11 @@ class Container
     result
   end
 
-  def call(args)
-    args = Container.new(stack: args.stack, knowns: args.knowns.clone)
-    call!(args)
+  def call(results)
+    call!(clone_knowns)
+  end
+  def execute
+    call(clone_knowns)
   end
 
   # ----- cloning ---- #
@@ -93,5 +96,43 @@ class Container
   end
 
 end
+
+
+
+
+
+
+
+
+
+
+require_relative 'keyword'
+require_relative 'identifier'
+require_relative '../builtins/operators'
+
+GET = Keyword::Get.new
+CALL = Keyword::Call.new
+NEWL = Keyword::Newline.new
+def stack(*args) Container.new(stack: args) end
+body = Container.new(stack: [
+  # stack(:foo, stack(stack(:x, GET, 2), :+, GET, CALL)), :set, GET, CALL,
+  # stack(stack(:x, 4), :set, GET, CALL), :foo, GET, CALL,
+  
+  stack(), stack(stack(:x, 4), :set, GET, CALL), CALL
+  # stack(stack(:x, GET, 2), :+, GET, CALL), CALL,
+
+])
+
+args = Container.new(knowns: {
+  :+   => Operators::Add,
+  :set => Operators::Assign,
+  # :foo => stack(:x, GET, 2, :+, GET, CALL)
+})
+result = body.execute(args)
+require 'ap'
+ap result, index: false
+p result.knowns
+
+
 
 
