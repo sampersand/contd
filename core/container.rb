@@ -11,7 +11,7 @@ class Container
   end
 
   # ---- Other methods ---- #
-  def merge(other)
+  def merge!(other)
     fail unless other.respond_to?(:stack)
     fail unless other.respond_to?(:knowns)
     #does the stack even matter??
@@ -80,7 +80,7 @@ class Container
   # ---- Function methods ---- #
 
   def call(args:, results:)
-    results.merge(args) #should this be cloned first?
+    results.merge!(args) #should this be cloned first?
     iter = @stack.each
     loop {
       case (token = iter.next)
