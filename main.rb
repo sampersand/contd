@@ -3,23 +3,20 @@ def stack(*args) Container.new(stack: args) end
 def knowns(**kwargs) Container.new(knowns: kwargs) end
 def  get; Keyword::Get.new end
 def call; Keyword::Call.new end
+def newl; Keyword::Newline.new end
 
 require_relative 'std/operators'
 
 body = stack(
- 5, 6,
  :'=',
  get,
  call,
- stack(:y, 4)
- # :'=',
- # get,
- # call,
- # stack(:y, 
- #       :+,
- #       get, 
- #       call,
- #       stack(:x, get, 4)),
+ stack(:y, 
+       :+,
+       get, 
+       call,
+       stack(:x, get, 4)),
+ newl,
 )
 args = knowns(x: 3,
               '+': Std::Functions::Operators::Add,
