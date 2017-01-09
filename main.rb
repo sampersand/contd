@@ -7,19 +7,19 @@ def call; Keyword::Call.new end
 require_relative 'std/operators'
 
 body = stack(
- # 4,
- # :'=',
- # get,
- # call,
- # stack(:y, 4)
+ 5, 6,
  :'=',
  get,
  call,
- stack(:y, 
-       :+,
-       get, 
-       call,
-       stack(:x, get, 4)),
+ stack(:y, 4)
+ # :'=',
+ # get,
+ # call,
+ # stack(:y, 
+ #       :+,
+ #       get, 
+ #       call,
+ #       stack(:x, get, 4)),
 )
 args = knowns(x: 3,
               '+': Std::Functions::Operators::Add,

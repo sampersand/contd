@@ -14,7 +14,10 @@ class Container
   def merge(other)
     fail unless other.respond_to?(:stack)
     fail unless other.respond_to?(:knowns)
-    @stack.concat(other.stack)
+    #does the stack even matter??
+    # @stack = other.stack.concat(@stack)#.concat(other.stack)
+    # p @stack
+    # @stack.concat(other.stack)
     @knowns.update(other.knowns)
   end
 
