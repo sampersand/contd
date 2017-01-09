@@ -11,11 +11,22 @@ class Parser
   end
 
   def parse(body)
+    knowns = knownize(body)
     tokens = tokenize(body)
     parse_tokens(tokens)
   end
 
   private
+  INCLUDE_STATEMENT = '#!INCLUDE'
+  def knownize(body)
+    knowns = Container.new
+    body.each_line{ |line| 
+      next unless line.start_with?(INCLUDE_STATEMENT)
+      to_include = lin
+      p to_include
+    }
+    exit
+  end
 
   def tokenize_handle_result(result) # TODO: MAKE THIS WORK WITH 1+2
     ind = /\s/ =~ result.last
@@ -97,8 +108,8 @@ body = parser.parse(File.read('code.rb'))
 args = Container.new
 args.knowns[Identifier.new( '+' )] = Operators::Add
 p body.stack
-res = body.call(args)
-p res
+body.call(args)
+p args
 
 
 
