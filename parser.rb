@@ -1,80 +1,80 @@
 class Parser
   require_relative 'container'
   require_relative 'keyword'
-  require_relative 'builtins'
+  require_relative 'pre_command'
 
   def parse(body)
-    result = Container.new
-    body_iter = body.each_char
-    body_iter = parse_includes_and_comments(body_iter, result)
-    parse_iterable(body_iter, result)
-    result
+    imported  = Container.new
+    char_iter = body.each_char
+    body      = parse_includes_and_comments(char_iter, imported)
+
+    token_iter = get_token_iter(body)
+    results     = parse_tokens(token_iter)
+
+    [results, imported]
   end
 
   private
 
-  def parse_includes_and_comments(body_iter, result)
-    parsed_body = []
+  def get_token_iter(body)
+    body.split(/([\W])/).reject(&:empty?).each
+  end
+
+  def parse_includes_and_comments(char_iter, results)
+    parsed_body = ''
     loop do 
-      if is_comment?(char = body_iter.next)
-        handle_comment(body_iter, result)
+      if is_comment?(char = char_iter.next)
+        line = ''
+        line += char_iter.next until is_end_comment?(line)
+        handle_precommand(line, results)
       else
-        parsed_body << char
+        parsed_body += char
       end
     end
-    parsed_body.each
+    parsed_body
   end
 
     def is_comment?(char)
       char == '#'
     end
 
-    def handle_comment(body_iter, result)
-      line = ''
-      line += body_iter.next until is_end_comment?(line)
-      parsed_include = parse_include(line)
-      handle_include(parsed_include, result) if parsed_include
+    def is_end_comment?(line)
+      line[-1] == "\n"
     end
 
-      def is_end_comment?(line)
-        line[-1] == "\n"
-      end
+    def handle_precommand(line, results)
+      
+      PreCommand::from(line).call(results)
+    end
 
-      def parse_include(line)
-        parsed = line.split(include_prefix, 2)[1]
-        return unless parsed
-        parsed.strip
-      end
-
-        def include_prefix
-          '!INCLUDE'
-        end
-
-      def handle_include(parsed, result)
-        to_include = get_include(parsed)
-        raise "Unknown include `#{parsed}`" unless to_include
-        result[ get_include_key(to_include) ] = to_include
-      end
-
-        def get_include(parsed)
-          Builtins.const_get(parsed)
-        end
-
-        def get_include_key(to_include)
-          to_include.name
-        end
-
-
-  def parse_iterable(body, result)
+  def parse_tokens(body)
+    results = Container.new
     loop do
       case (token = body.next)
-      when 1
+      when left_paren? #ignore
+        results << parse_tokens(body)
+      when right_paren?
+        break
+      when whitespace? #ignore
       else 
-        p token
+        results << instantiate_token(token)
       end
     end
+    results
   end
+    def whitespace?; /\s/ end
+    def left_paren?; /[({\[]/ end
+    def right_paren?; /[)}\]]/ end
 
+    def instantiate_token(token)
+      case token
+      when call_keyword then Keyword::Call.new#( token )
+      when get_keyword  then Keyword::Get.new#( token )
+      else Identifier.new( token.to_sym )
+      end
+    end
+      def call_keyword; /@/ end
+      def get_keyword; /!/ end
 end
 
 

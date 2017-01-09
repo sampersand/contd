@@ -1,8 +1,9 @@
 module Builtins
+  require_relative 'identifier'
   class Function
     attr_reader :name
     def initialize(name, &func)
-      @name = name
+      @name = Identifier.new( name )
       @func = func
     end
 
@@ -14,19 +15,19 @@ module Builtins
       "#{self.class}( #{@name} )"
     end
 
-    def call(args, results)
-      @func.call(args, results)
+    def call(args:, results:)
+      @func.call(args: args, results: results)
     end
   end
 
 
-  Add = Function.new(:+){ |args, results|
+  Add = Function.new(:+){ |args:, results:|
     results << (args >> 2) + args.pop
   }
-  Div = Function.new(:/){ |args, results|
+  Div = Function.new(:/){ |args:, results:|
     results << (args >> 2) / args.pop
   }  
-  Assign = Function.new(:'='){ |args, results|
+  Assign = Function.new(:'='){ |args:, results:|
     results << (results[args >> 2] = args.pop)
   }
 end

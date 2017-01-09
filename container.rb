@@ -72,13 +72,13 @@ class Container
   end
 
   # ---- Function methods ---- #
-  def call(args, results)
+  def call(args:, results:)
     raise 'How to deal with args with positionals?' unless args.empty?
     results.update(args)
-    call!(results)
+    call!(results: results)
   end
 
-  def call!(results)
+  def call!(results:)
     itr = each
     loop do 
       case (token = itr.next)
@@ -94,8 +94,8 @@ class Container
         func = results.pop
         args = itr.next
         call_results = Container.new
-        args.call(results, call_results)
-        func.call(call_results, results)
+        args.call(args: results, results: call_results)
+        func.call(args: call_results, results: results)
       else
         results << token
       end
