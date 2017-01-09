@@ -24,4 +24,5 @@ args = knowns(x: 3,
               )
 results = stack
 body.call(args: args, results: results)
+body.merge(args).call(args: stack, results: results)
 p results

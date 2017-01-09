@@ -1,6 +1,4 @@
 class Parser
-  require_relative 'container'
-  require_relative 'keyword'
   require_relative 'pre_command'
 
   def parse(body)

@@ -19,6 +19,7 @@ class Container
     # p @stack
     # @stack.concat(other.stack)
     @knowns.update(other.knowns)
+    self
   end
 
   def clone
