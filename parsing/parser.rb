@@ -1,10 +1,14 @@
 
 class Parser
   require_relative '../core/container'
-  require_relative 'parser_api'
+  require_relative '../std/std_commands'
+
+  attr_reader :options
 
   def initialize(**options)
-    @keywords = options[:keywords] || {'!': Keyword::Get, '@': Keyword::Call }
+    @options = options
+    @options[:keywords] ||= {'!': Keyword::Get, '@': Keyword::Call }
+    @options[:commands] ||= Std::PreCommands
   end
 
   def parse(body)
@@ -37,15 +41,32 @@ class Parser
 
   # comment handling
     def handle_comment(token, results, iter)
+      comment = token[-1]
       handle_token(token.chop!, results, iter)
-      comment = ''
       loop do 
         case (comment.concat iter.next)
         when end_comment? then break
         end
       end
-      # comment to be used for pre-commands
+      fail unless (end_comment? === comment[-1])
+
+      return unless comment.start_with? precommand_prefix
+      process_precommand(*comment.sub(precommand_prefix, '').
+                                  chop!.
+                                  split(' ').collect(&:to_sym),
+                         results: results)
     end
+
+    def precommand_prefix
+      '#!'
+    end
+
+    def process_precommand(cmd, *args, results:)
+      command = @options[:commands][cmd]
+      raise "Unknown precommand `#{cmd.inspect}`" unless command
+      command.call(*args, results: results, parser: self)
+    end
+
 
     def comment?
       %r(.*#$)
@@ -103,15 +124,15 @@ class Parser
     end
 
       def is_sym_a_keyword?(sym)
-        @keywords.include?(sym)
+        @options[:keywords].include?(sym)
       end
 
       def get_keyword(sym)
-        @keywords[sym].new
+        @options[:keywords][sym].new
       end
 
       def get_identifier(sym)
-        sym
+        (@options[:get_identifier] || proc{ |a| a }).call(sym)
       end
 end
 
@@ -123,14 +144,13 @@ parser = Parser.new
 
 
 body, args = parser.parse('''#
-#! Inlcude Add Sub
-#! Number
+#! Include Add Sub
+#! Numbers
 +! @ (33 4)
 ''')
 puts '----'
 p body, args
 puts '----'
-exit
 
 results = Container.new
 body.call(args: args, results: results)

@@ -5,7 +5,7 @@ module Std
     end
 
     def inspect
-      "#{self.class}"
+      "#{self.class.name}"
     end
 
     def call(args:, results:)
