@@ -17,6 +17,11 @@ class Container
                    knowns: @knowns.clone.update(other.knowns))
   end
 
+  def clone
+    self.class.new(stack: @stack.clone, knowns: @knowns.clone )
+  end
+
+  # ---- String repr ---- #
   def to_s
     if @knowns.empty?
       stack_s
@@ -34,13 +39,8 @@ class Container
     "{#{@knowns.collect{ |k, v| "#{k}: #{v}" }.join(', ')}}"
   end
 
-
   def inspect #maybe change this later?
     "#{self.class}( #{@stack}, #{@knowns} )"
-  end
-
-  def clone
-    self.class.new(stack: @stack.clone, knowns: @knowns.clone )
   end
 
   # ---- Array methods ---- #
