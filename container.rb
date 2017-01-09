@@ -8,13 +8,11 @@ class Container
   end
 
   # ---- Other methods ---- #
-  def merge(other)
-
+  def update(other)
     fail unless other.respond_to?(:stack)
     fail unless other.respond_to?(:knowns)
-
-    self.class.new(stack:  @stack.clone.concat(other.stack),
-                   knowns: @knowns.clone.update(other.knowns))
+    @stack.concat(other.stack)
+    @knowns.update(other.knowns)
   end
 
   def clone
@@ -75,8 +73,8 @@ class Container
 
   # ---- Function methods ---- #
   def call(args, results)
-    raise 'How to deal with results with positionals?' unless results.empty?
-    results.knowns.update(args.knowns) #maybe somethign with stack?
+    raise 'How to deal with args with positionals?' unless args.empty?
+    results.update(args)
     call!(results)
   end
 
@@ -121,15 +119,17 @@ if __FILE__ == $0
   def stack(*a) Container.new(stack: a) end
   def get; Keyword::Get.new end
   def call; Keyword::Call.new end
+  def newl; Keyword::Newline.new end
   body = stack( # foo! @ (1, 2)
     :eql, get, call,
     stack(:foo, stack( :+, get, call, stack(:x, get, 5 ))),
-    Keyword::Newline.new,
+    newl,
 
     :foo, get, call,
     stack(
       :eql, get, call,
       stack(:x, 2),
+      newl,
     ),
   )
   args = Container.new( knowns: {
