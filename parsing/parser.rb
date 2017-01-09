@@ -1,46 +1,157 @@
+
 class Parser
   require_relative '../core/container'
   require_relative 'parser_api'
 
-  def initialize(*commands, use_default: true)
-    @commands = commands.collect{ |cmd| cmd.new(self) }
-    @commands << DefaultParserAPI.new(self) if use_default
+  def initialize(**options)
+    @keywords = options[:keywords] || {'!': Keyword::Get, '@': Keyword::Call }
   end
 
   def parse(body)
     results = Container.new
     # body = parse_precommands(body, results)
     parse_body(body.each_char, results)
-    results
   end
 
   def parse_body(iter, results)
     token = ''
     loop do
-      args = [iter.next, token, results, iter]
-      command_func(:start_comment, *args) ||
-      command_func(:continue_comment, *args) ||
-      command_func(:end_comment, *args) ||
-
-      command_func(:start_container, *args) ||
-      (command_func(:end_container, *args) and break) || 
-
-      command_func(:start_token, *args) ||
-      command_func(:continue_token, *args) ||
-      command_func(:end_token, *args) || 
-
-      fail(args.to_s)
+      case (token.concat iter.next)
+      when comment?
+        handle_comment(token, results, iter)
+      when begin_container?
+        handle_container(token, results, iter)
+      when end_container?
+        handle_token(token.chop!, results, iter)
+        break
+      else
+        # do nothing, token is already concatinated
+      end
     end
-    
+    handle_token(token, results, iter)
     raise token unless token.empty?
+    results
   end
 
+  private
 
-  def command_func(meth, char, token, results, iter)
-    res = @commands.any?{ |command| command.method(meth).call(char, token, results, iter) }
-  end
+  # comment handling
+    def handle_comment(token, results, iter)
+      handle_token(token.chop!, results, iter)
+      comment = ''
+      loop do 
+        case (comment.concat iter.next)
+        when end_comment? then break
+        end
+      end
+      # comment to be used for pre-commands
+    end
 
+    def comment?
+      %r(.*#$)
+    end
+
+    def end_comment?
+      /\n$/
+    end
+
+  # container
+    def handle_container(token, results, iter)
+      handle_token(token.chop!, results, iter)
+      results << parse_body(iter, results.class.new)
+    end
+
+    def begin_container?
+      /[{(\[]/
+    end
+
+    def end_container?
+      /[})\]]/
+    end
+
+
+  # token
+    def handle_token(token, results, _)
+      # take the large token and break it apart into smaller tokens. IE '1+x' --> ['1', '+', 'x']
+      return if token.empty?
+      break_apart_token(token, results).each{ |sym| process_single_sym(sym, results) }
+    end
+
+    def break_apart_token(token, results)
+      # DANGEROUS. THIS IS WILL NOT WORK FOR MORE ABSTRACT STUFF
+      whitespace = " \n\t".chars
+      break_ons = "@!+-*/=^".chars + whitespace
+      # this should split at whitespace and defined operators.
+      res = [token]
+      break_ons.each do |sym_to_break_on| 
+        res.collect! do |e|
+          e.partition(sym_to_break_on) # WILL FAIL!
+          # 'a+b+c'.partition(/+/) --> ['a', '+', 'b+c']
+        end.flatten!.delete_if(&:empty?)
+      end
+      res.reject!(&whitespace.method(:include?)).collect!(&:to_sym)
+      token.clear
+      res
+    end
+
+    def process_single_sym(sym, results)
+      results << if is_sym_a_keyword? sym
+                   get_keyword(sym)
+                 else
+                   get_identifier(sym)
+                 end
+    end
+
+      def is_sym_a_keyword?(sym)
+        @keywords.include?(sym)
+      end
+
+      def get_keyword(sym)
+        @keywords[sym].new
+      end
+
+      def get_identifier(sym)
+        sym
+      end
 end
+
+
+
+
+
+parser = Parser.new
+
+
+body, args = parser.parse('''#
+#! Inlcude Add Sub
+#! Number
++! @ (33 4)
+''')
+puts '----'
+p body, args
+puts '----'
+exit
+
+results = Container.new
+body.call(args: args, results: results)
+puts results
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

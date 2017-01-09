@@ -27,7 +27,7 @@ class DefaultParserAPI
 
 
   def start_comment(char, token, *_)
-    return unless COMMENT_START =~ char
+    return unless COMMENT_START.match char
     token.concat char
   end
 
@@ -38,10 +38,7 @@ class DefaultParserAPI
 
   def end_comment(char, token, *_)
     return unless COMMENT_START =~ token && COMMENT_END =~ char
-    p token
     token.sub!(COMMENT_START, '')
-    p token
-    1
   end
 
 
