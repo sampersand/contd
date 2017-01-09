@@ -12,14 +12,38 @@ class Operator
     "#{self.class}( #{@name} )"
   end
 
-  def call(results)
-    @func.call(results)
+  def call(args, results)
+    @func.call(args, results)
   end
 
 end
 
-Operator::Add = Operator.new(:+){ |results| results.delete_at(-2) + results.pop }
-Operator::Div = Operator.new(:/){ |results| results.delete_at(-2) / results.pop }
+Operator::Add = Operator.new(:+){ |args, results|
+  results << (args >> 2) + args.pop
+}
+Operator::Div = Operator.new(:/){ |args, results|
+  results << (args >> 2) / args.pop
+}
+
+Operator::Assign = Operator.new(:'='){ |args, results|
+  results << (results[args >> 2] = args.pop)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

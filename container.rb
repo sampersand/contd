@@ -43,11 +43,11 @@ class Container
   end
 
   def pop
-    @stack.pop
+    self >> 1
   end
 
-  def delete_at(pos)
-    @stack.delete_at(pos)
+  def >>(pos)
+    @stack.delete_at(-pos)
   end
 
   # ---- Hash methods ---- #
@@ -78,7 +78,7 @@ class Container
       when Keyword::Call
         func = results.pop
         args = itr.next
-        results << func.call(args) # I've decided that function results go on the stack always
+        func.call(args, results) # I've decided that function results go on the stack always
       else
         results << token
       end
@@ -101,13 +101,12 @@ if __FILE__ == $0
   require_relative 'keyword'
   require_relative 'operator'
   body = Container.new(stack: [ # foo! @ (1, 2)
-    :foo,
+    :eql,
     Keyword::Get.new,
     Keyword::Call.new,
-    Container.new(stack: [1.0, 2]),
+    Container.new(stack: [:x, 2]),
   ])
-  results = Container.new( knowns: { foo: Operator::Div } )
-
+  results = Container.new( knowns: { eql: Operator::Assign } )
   puts body.call(results)
 end
 
