@@ -18,8 +18,22 @@ class Container
   end
 
   def to_s
-    "#{self.class}( #{@stack}, #{@knowns} )"
+    if @knowns.empty?
+      stack_s
+    elsif @stack.empty?
+      knowns_s
+    else
+      "( #{stack_s}, #{knowns_s} )"
+    end
   end
+
+  def stack_s
+    "[#{@stack.join(', ')}]"
+  end
+  def knowns_s
+    "{#{@knowns.collect{ |k, v| "#{k}: #{v}" }.join(', ')}}"
+  end
+
 
   def inspect #maybe change this later?
     "#{self.class}( #{@stack}, #{@knowns} )"
@@ -99,16 +113,21 @@ end
 
 if __FILE__ == $0
   require_relative 'keyword'
-  require_relative 'operator'
+  require_relative 'builtins'
   body = Container.new(stack: [ # foo! @ (1, 2)
     :eql,
     Keyword::Get.new,
     Keyword::Call.new,
-    Container.new(stack: [:x, 2]),
+    Container.new(stack: [:arr, Container.new(stack: [1, 2]) ])
   ])
-  results = Container.new( knowns: { eql: Operator::Assign } )
+  results = Container.new( knowns: { eql: Builtins::Assign } )
   puts body.call(results)
 end
+
+
+
+
+
 
 
 
