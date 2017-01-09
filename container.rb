@@ -83,6 +83,8 @@ class Container
     itr = each
     loop do 
       case (token = itr.next)
+      when Keyword::Newline
+        results.pop #and throw it away
       when Keyword::Get
         fail if results.empty?
         key   = results.pop
@@ -114,12 +116,19 @@ end
 if __FILE__ == $0
   require_relative 'keyword'
   require_relative 'builtins'
-  body = Container.new(stack: [ # foo! @ (1, 2)
+  def stack(*a) Container.new(stack: a) end
+  body = stack( # foo! @ (1, 2)
     :eql,
     Keyword::Get.new,
     Keyword::Call.new,
-    Container.new(stack: [:arr, Container.new(stack: [1, 2]) ])
-  ])
+    stack(:foo, stack(:x, Keyword::Get.new) ),
+    Keyword::Newline.new,
+
+    :foo,
+    Keyword::Get.new,
+    Keyword::Call.new,
+    stack(),
+  )
   results = Container.new( knowns: { eql: Builtins::Assign } )
   puts body.call(results)
 end
