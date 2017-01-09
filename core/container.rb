@@ -47,9 +47,6 @@ class Container
   end
 
   # ---- Array methods ---- #
-  def each(&block)
-    @stack.each(&block)
-  end
 
   def empty?
     @stack.empty?
@@ -80,22 +77,22 @@ class Container
 
   def call(args:, results:)
     raise 'How to deal with args with positionals?' unless args.empty?
-    results.update(args)
-    iter = each
-    loop do 
+    results.update(args) #should this be cloned first?
+    iter = @stack.each
+    loop {
       case (token = iter.next)
       when Keyword::Newline then handle_newline(results: results, iter: iter, token: token)
-      when Keyword::Get then     handle_get(results: results, iter: iter, token: token)
-      when Keyword::Call then    handle_call(results: results, iter: iter, token: token)
-      else                       handle_else(results: results, iter: iter, token: token)
+      when Keyword::Get     then handle_get(    results: results, iter: iter, token: token)
+      when Keyword::Call    then handle_call(   results: results, iter: iter, token: token)
+      else                       handle_else(   results: results, iter: iter, token: token)
       end
-    end
+    }
   end
 
   private
 
   def handle_newline(results:, iter:, token:)
-    results.pop #and throw it away
+    results.pop
   end
 
   def handle_call(results:, iter:, token:)
@@ -130,7 +127,7 @@ args = Container.new(knowns: {x: 1})
 results = Container.new
 
 
-body.call(args: args, current_scope: results)
+body.call(args: args, results: results)
 puts results
 
 

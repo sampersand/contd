@@ -1,5 +1,4 @@
 class Keyword
-
   def to_s
     self.class.name
   end
