@@ -1,119 +1,46 @@
 class Parser
   require_relative '../core/container'
-  require_relative 'pre_command'
+  require_relative 'parser_api'
 
-  def initialize(**options)
-    @whitespace = /\s/ || options[:whitespace]
-    @parens = /[(){}\[\]]/ || options[:parens]
-    @keywords = {'!': Keyword::Get, '@': Keyword::Call} || options[:keywords]
+  def initialize(*commands, use_default: true)
+    @commands = commands.collect{ |cmd| cmd.new(self) }
+    @commands << DefaultParserAPI.new(self) if use_default
   end
 
   def parse(body)
     results = Container.new
     # body = parse_precommands(body, results)
-    parse_body(body, results)
+    parse_body(body.each_char, results)
     results
   end
 
-  private
-
-  def parse_precommands(body, results)
-    body.each_line.collect do |line|
-      if is_precommand? line
-        # split_precommand(line).call(self, results)
-      else
-        line
-      end
-    end.compact.join
-  end
-    def precommand_prefix
-      '#! '
-    end
-
-    def is_precommand?(text)
-      text.start_with? precommand_prefix
-    end
-
-    # def split_precommand(text)
-    #   text.gsub(precommand_prefix, '').strip.split(/ /)
-    # end
-
-    # def process_precommand(cmd, *args)
-    #   puts "TODO: process_precommand(#{cmd}, *#{args})"
-    # end
-
-  def parse_body(body, results)
+  def parse_body(iter, results)
     token = ''
-    body.each_char do |char|
-      args = {char: char, token: token, results: results}
-      case
-      when start_token?(**args)
-        token = char
-      when continue_token?(**args)
-        token += char
-      when end_token?(**args)
-        results << parse_token(token: token, results: results) if append_token?(token: token, results: results)
-        token.clear
-      else fail "No known way to deal with: char: `#{char}`, token: `#{token}`, results: `#{results}`"
-      end
+    loop do
+      args = [iter.next, token, results, iter]
+      command_func(:start_comment, *args) ||
+      command_func(:continue_comment, *args) ||
+      command_func(:end_comment, *args) ||
+
+      command_func(:start_container, *args) ||
+      (command_func(:end_container, *args) and break) || 
+
+      command_func(:start_token, *args) ||
+      command_func(:continue_token, *args) ||
+      command_func(:end_token, *args) || 
+
+      fail(args.to_s)
     end
-    results << parse_token(token: token, results: results) unless token.empty?
+    
+    raise token unless token.empty?
   end
-    def start_token?(char:, token:, results:)
-      return false unless token.empty?
-      case char
-      when @whitespace then false
-      else true
-      end
-    end
 
-    def continue_token?(char:, token:, results:)
-      case char
-      when @whitespace, @parens, @keywords then false
-      else true
-      end
-    end
 
-    def end_token?(char:, token:, results:)
-      case char
-      when @whitespace, @parens, @keywords then true
-      else false
-      end
-    end
-    def append_token?(token:, results:)
-      true
-    end
-    def parse_token(token:, results:)
-      case token
-      when @keyword then parse_keyword( token )
-      else parse_identifier( token )
-      end
-    end
-      def parse_keyword(token)
-        @keywords[token].new
-      end
-      def parse_identifier(token)
-        token
-      end
+  def command_func(meth, char, token, results, iter)
+    res = @commands.any?{ |command| command.method(meth).call(char, token, results, iter) }
+  end
+
 end
-
-
-
-parser = Parser.new
-
-body, args = parser.parse('''
-#! Inlcude Add Sub
-#! Number
-+! @ (3 4)
-''')
-puts '----'
-p body, args
-puts '----'
-exit
-
-results = Container.new
-body.call(args: args, results: results)
-puts results
 
 
 

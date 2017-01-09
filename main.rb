@@ -1,18 +1,21 @@
-# require_relative 'parsing/parser'
-# parser = Parser.new
-
-# body, args = parser.parse('''
-# #! Inlcude Add Sub
-# #! Number
-# +! @ (3 4)
-# ''')
-
-# results = Container.new
-# body.call(args: args, results: results)
-# puts results
+require_relative 'parsing/parser'
 
 
-a = [1, 2, 3, 4]
-i = a.each
-i = 0
-p loop until (i += 1) == 10
+parser = Parser.new
+
+body, args = parser.parse('''
+#! Inlcude Add Sub
+#! Number
++! @ (33 4)
+''')
+puts '----'
+p body, args
+puts '----'
+exit
+
+results = Container.new
+body.call(args: args, results: results)
+puts results
+
+
+
