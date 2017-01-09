@@ -76,7 +76,6 @@ class Container
   # ---- Function methods ---- #
 
   def call(args:, results:)
-    raise 'How to deal with args with positionals?' unless args.empty?
     results.merge(args) #should this be cloned first?
     iter = @stack.each
     loop {

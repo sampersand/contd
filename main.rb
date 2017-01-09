@@ -1,13 +1,30 @@
-# require_relative 'parser'
-# parser = Parser.new
+require_relative 'core/container'
+def stack(*args) Container.new(stack: args) end
+def knowns(**kwargs) Container.new(knowns: kwargs) end
+def  get; Keyword::Get.new end
+def call; Keyword::Call.new end
 
-# body, args = parser.parse('''
-# #! Inlcude Add
-# #! Number
-# +! @ (3 4)
-# ''')
+require_relative 'std/operators'
 
-# results = Container.new
-# body.call(args: args, results: results)
-# puts results
-require_relative 'core/'
+body = stack(
+ # 4,
+ # :'=',
+ # get,
+ # call,
+ # stack(:y, 4)
+ :'=',
+ get,
+ call,
+ stack(:y, 
+       :+,
+       get, 
+       call,
+       stack(:x, get, 4)),
+)
+args = knowns(x: 3,
+              '+': Std::Functions::Operators::Add,
+              '=': Std::Functions::Operators::Assign,
+              )
+results = stack
+body.call(args: args, results: results)
+p results
