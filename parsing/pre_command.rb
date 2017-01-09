@@ -1,5 +1,5 @@
 class PreCommand
-  require_relative 'builtins'
+  # require_relative 'builtins'
 
   def self.from(raw_cmd)
     puts raw_cmd

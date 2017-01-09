@@ -1,94 +1,70 @@
 class Parser
+  require_relative '../core/container'
   require_relative 'pre_command'
+  def initialize(body)
+    @body = body
+    @results = Container.new
+  end
 
-  def parse(body)
-    imported  = Container.new
-    char_iter = body.each_char
-    body      = parse_includes_and_comments(char_iter, imported)
-
-    token_iter = get_token_iter(body)
-    results     = parse_tokens(token_iter)
-
-    [results, imported]
+  def execute
+    parse_precommands
+    parse
+    @results
   end
 
   private
 
-  def get_token_iter(body)
-    body.split(/([\W])/).reject(&:empty?).each
+  def parse_precommands
+    @body = @body.each_line.collect do |line|
+              if is_precommand? line
+                process_precommand *split_precommand(line)
+              else
+                line
+              end
+            end.compact.join
+  end
+    def precommand_prefix
+      '#! '
+    end
+
+    def is_precommand?(text)
+      text.start_with? precommand_prefix
+    end
+
+    def split_precommand(text)
+      text.gsub(precommand_prefix, '').strip.split(/ /)
+    end
+
+    def process_precommand(cmd, *args)
+      puts "TODO: process_precommand(#{cmd}, *#{args})"
+    end
+
+  def parse
+    last = ''
+    @body.each_char do |char|
+    end
+
   end
 
-  def parse_includes_and_comments(char_iter, results)
-    parsed_body = ''
-    loop do 
-      if is_comment?(char = char_iter.next)
-        line = ''
-        line += char_iter.next until is_end_comment?(line)
-        handle_precommand(line, results)
-      else
-        parsed_body += char
-      end
-    end
-    parsed_body
-  end
-
-    def is_comment?(char)
-      char == '#'
-    end
-
-    def is_end_comment?(line)
-      line[-1] == "\n"
-    end
-
-    def handle_precommand(line, results)
-      
-      PreCommand::from(line).call(results)
-    end
-
-  def parse_tokens(body)
-    results = Container.new
-    loop do
-      case (token = body.next)
-      when left_paren? #ignore
-        results << parse_tokens(body)
-      when right_paren?
-        break
-      when whitespace? #ignore
-      else 
-        results << instantiate_token(token)
-      end
-    end
-    results
-  end
-    def whitespace?; /\s/ end
-    def left_paren?; /[({\[]/ end
-    def right_paren?; /[)}\]]/ end
-
-    def instantiate_token(token)
-      case token
-      when call_keyword then Keyword::Call.new#( token )
-      when get_keyword  then Keyword::Get.new#( token )
-      else Identifier.new( token.to_sym )
-      end
-    end
-      def call_keyword; /@/ end
-      def get_keyword; /!/ end
 end
 
 
 
+parser = Parser.new('''
+#! Inlcude Add Sub
+#! Number
++! @ (3 4)
+''')
 
+body, args = parser.execute
+puts '----'
+p body, args
+puts '----'
+exit
 
-
-
-
-
-
-
-
-
-
-
+results = Container.new
+body.call(args: args, results: results)
+puts results
 
 
 

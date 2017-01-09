@@ -1,28 +1,18 @@
-require_relative 'core/container'
-def stack(*args) Container.new(stack: args) end
-def knowns(**kwargs) Container.new(knowns: kwargs) end
-def  get; Keyword::Get.new end
-def call; Keyword::Call.new end
-def newl; Keyword::Newline.new end
+# require_relative 'parsing/parser'
+# parser = Parser.new
 
-require_relative 'std/operators'
+# body, args = parser.parse('''
+# #! Inlcude Add Sub
+# #! Number
+# +! @ (3 4)
+# ''')
 
-body = stack(
- :'=',
- get,
- call,
- stack(:y, 
-       :+,
-       get, 
-       call,
-       stack(:x, get, 4)),
- newl,
-)
-args = knowns(x: 3,
-              '+': Std::Functions::Operators::Add,
-              '=': Std::Functions::Operators::Assign,
-              )
-results = stack
-body.call(args: args, results: results)
-body.merge(args).call(args: stack, results: results)
-p results
+# results = Container.new
+# body.call(args: args, results: results)
+# puts results
+
+
+a = [1, 2, 3, 4]
+i = a.each
+i = 0
+p loop until (i += 1) == 10
