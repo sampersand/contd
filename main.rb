@@ -3,7 +3,7 @@ parser = Parser.new
 
 res = parser.parse('''
 #!INCLUDE Add
-3 + 4
+33 + 4
 ''')
 
 puts res
