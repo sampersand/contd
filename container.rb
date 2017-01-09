@@ -74,9 +74,10 @@ class Container
   end
 
   # ---- Function methods ---- #
-  def call(results)
+  def call(args, results)
     raise 'How to deal with results with positionals?' unless results.empty?
-    call!( results.clone )
+    results.knowns.update(args.knowns) #maybe somethign with stack?
+    call!(results)
   end
 
   def call!(results)
@@ -94,12 +95,13 @@ class Container
       when Keyword::Call
         func = results.pop
         args = itr.next
-        func.call(args, results) # I've decided that function results go on the stack always
+        call_results = Container.new
+        args.call(results, call_results)
+        func.call(call_results, results)
       else
         results << token
       end
     end
-    results
   end
 
 end
@@ -117,20 +119,26 @@ if __FILE__ == $0
   require_relative 'keyword'
   require_relative 'builtins'
   def stack(*a) Container.new(stack: a) end
+  def get; Keyword::Get.new end
+  def call; Keyword::Call.new end
   body = stack( # foo! @ (1, 2)
-    :eql,
-    Keyword::Get.new,
-    Keyword::Call.new,
-    stack(:foo, stack(:x, Keyword::Get.new) ),
+    :eql, get, call,
+    stack(:foo, stack( :+, get, call, stack(:x, get, 5 ))),
     Keyword::Newline.new,
 
-    :foo,
-    Keyword::Get.new,
-    Keyword::Call.new,
-    stack(),
+    :foo, get, call,
+    stack(
+      :eql, get, call,
+      stack(:x, 2),
+    ),
   )
-  results = Container.new( knowns: { eql: Builtins::Assign } )
-  puts body.call(results)
+  args = Container.new( knowns: {
+    eql: Builtins::Assign,
+    '+': Builtins::Add,
+  } )
+  results = Container.new
+  body.call(args, results)
+  puts results
 end
 
 
