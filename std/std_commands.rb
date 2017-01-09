@@ -17,10 +17,11 @@ module Std
 
     DEFAULT_PRECOMMANDS = {
       'Include': proc{ |*names, results:, parser:|
-        names.each do |name|
+        names.each do |name_alias|
+          name, name_alias = name_alias.to_s.split('=', 2).collect(&:to_sym)
           value = KNOWNS[name]
           raise "Unknown Include `#{name}`" unless value
-          results[name] = value
+          results[name_alias || name] = value
         end
       },
       'Numbers': proc{ |results:, parser:| 

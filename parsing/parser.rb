@@ -143,17 +143,18 @@ end
 parser = Parser.new
 
 
-body, args = parser.parse('''#
-#! Include Add Sub
+body = parser.parse('''#
+#! Include Add=+ Sub
 #! Numbers
-+! @ (33 4)
++ ! @ (33 4)
 ''')
 puts '----'
-p body, args
+p body
 puts '----'
 
+
 results = Container.new
-body.call(args: args, results: results)
+body.call(args: body, results: results)
 puts results
 
 

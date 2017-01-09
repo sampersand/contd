@@ -1,1 +1,1 @@
-Float('a')
+a, b = 'acb'.split('=', 2)
