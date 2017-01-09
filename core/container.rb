@@ -11,7 +11,7 @@ class Container
   end
 
   # ---- Other methods ---- #
-  def update(other)
+  def merge(other)
     fail unless other.respond_to?(:stack)
     fail unless other.respond_to?(:knowns)
     @stack.concat(other.stack)
@@ -77,7 +77,7 @@ class Container
 
   def call(args:, results:)
     raise 'How to deal with args with positionals?' unless args.empty?
-    results.update(args) #should this be cloned first?
+    results.merge(args) #should this be cloned first?
     iter = @stack.each
     loop {
       case (token = iter.next)
@@ -115,32 +115,6 @@ class Container
     results << token
   end
 end
-
-
-
-
-body = Container.new(stack: [
-  :x,
-  Keyword::Get.new,
-])
-args = Container.new(knowns: {x: 1})
-results = Container.new
-
-
-body.call(args: args, results: results)
-puts results
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
