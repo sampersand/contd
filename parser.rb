@@ -3,11 +3,6 @@ class Parser
   require_relative 'keyword'
   require_relative 'builtins'
 
-  def initialize(**options)
-    @options = options
-    @includes = Builtins::All
-  end
-
   def parse(body)
     result = Container.new
     body_iter = body.each_char
@@ -45,12 +40,16 @@ class Parser
     return unless line.start_with?('!INCLUDE')
 
     parsed_to_include = line.split('!INCLUDE', 2)[1].strip
-    to_include = @includes[parsed_to_include.to_sym]
+    to_include = get_include(parsed_to_include)
 
     raise "Unknown include `#{parsed_to_include}`" unless to_include
-    result[ parsed_to_include ] = to_include
+
+    result[ to_include.name ] = to_include
   end
 
+  def get_include(parsed)
+    Builtins.const_get(parsed)
+  end
 
   def parse_iterable(body)
   end

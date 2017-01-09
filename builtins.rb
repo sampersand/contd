@@ -1,10 +1,9 @@
 module Builtins
-  All = {}
   class Function
+    attr_reader :name
     def initialize(name, &func)
       @name = name
       @func = func
-      Builtins::All[@name] = self
     end
 
     def to_s

@@ -2,9 +2,8 @@ require_relative 'parser'
 parser = Parser.new
 
 res = parser.parse('''
-#!INCLUDE +
+#!INCLUDE Add
 3 + 4
-# #!INCLUDE -
 ''')
 
 puts res
