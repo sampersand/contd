@@ -18,4 +18,9 @@ class Operator
 
 end
 
-Operator::Add = Operator.new(:+){ |results| results.pop + results.pop }
+Operator::Add = Operator.new(:+){ |results| results.delete_at(-2) + results.pop }
+Operator::Div = Operator.new(:/){ |results| results.delete_at(-2) / results.pop }
+
+
+
+
