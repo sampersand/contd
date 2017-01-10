@@ -32,6 +32,9 @@ module Std
             sym
           end
         end
+      },
+      'Infix': proc{ |*names, results:, parser:| 
+        parser.options[:infixes].concat(names)
       }
       
     }

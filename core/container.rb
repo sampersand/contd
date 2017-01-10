@@ -100,7 +100,12 @@ class Container
 
   def handle_call(results:, iter:, token:)
     func = results.pop
-    args = iter.next
+    if func.is_a?(Proc)
+      args = Container.new(stack: [results.pop, iter.next])      
+    else
+      args = iter.next
+    end
+
     call_results = self.class.new
     args.call(args: results, results: call_results)
     func.call(args: call_results, results: results)
@@ -118,6 +123,32 @@ class Container
     results << token
   end
 end
+
+
+
+body = Container.new(stack: [1, :-, Keyword::Get.new, Keyword::Call.new, 2])
+args = Container.new(knowns: {'-': proc { |args:, results:| results << (args >> 2) - (args >> 1) }})
+results = Container.new
+body.call(args: args, results: results)
+puts results
+puts args
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

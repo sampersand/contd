@@ -9,14 +9,15 @@ class Parser
     @options = options
     @options[:keywords] ||= {'!': Keyword::Get, '@': Keyword::Call }
     @options[:commands] ||= Std::PreCommands
+    @options[:infixes] ||= []
   end
 
   def parse(body)
     results = Container.new
     # body = parse_precommands(body, results)
-    parse_body(body.each_char, results)
+    results = parse_body(body.each_char, results)
+    parse_infixes(results)
   end
-
   def parse_body(iter, results)
     token = ''
     loop do
@@ -144,9 +145,10 @@ parser = Parser.new
 
 
 body = parser.parse('''#
-#! Include Add=+ Sub
+#! Include Add=+ Sub Mul=*
 #! Numbers
-+ ! @ (33 4)
+#! Infix +
+33 *! 4 @
 ''')
 puts '----'
 p body
