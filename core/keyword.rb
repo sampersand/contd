@@ -6,9 +6,54 @@ class Keyword
   def inspect
     "#{self.class}"
   end
+
+  class Newline < Keyword
+    def process(body:, result:)
+      result.pop #and throw away
+    end
+  end
+
+  class Get < Keyword
+    def process(body:, result:)
+      result.push result[result.pop]
+    end
+  end
+
+  class Call < Keyword
+    def process(body:, result:)
+      func = result.pop
+      p [body.peek]
+    end
+  end
+
 end
 
-Keyword::Get = Class.new(Keyword)
-Keyword::Call = Class.new(Keyword)
-Keyword::Newline = Class.new(Keyword)
-Keyword::This = Class.new(Keyword)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

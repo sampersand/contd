@@ -1,170 +1,97 @@
 require_relative 'keyword'
 class Container
 
-  # ---- Attributes ---- #
   attr_reader :stack, :knowns
-
-  # ---- Initializer ---- #
   def initialize(stack: nil, knowns: nil)
-    @stack = stack || []
+    @stack  = stack || []
     @knowns = knowns || {}
   end
 
-  # ---- Other methods ---- #
-  def merge!(other)
-    fail unless other.respond_to?(:stack)
-    fail unless other.respond_to?(:knowns)
-    #does the stack even matter??
-    # @stack = other.stack.concat(@stack)#.concat(other.stack)
-    # p @stack
-    # @stack = @stack.clone.concat(other.stack)
-    # @stack.concat(other.stack)
-    @knowns.update(other.knowns)
-    self
+  # --- Array & Hash Methods --- #
+  def update(other)
+    @stack.concat other.stack
+    @knowns.update other.knowns
   end
 
-  def clone
-    self.class.new(stack: @stack.clone,
-                   knowns: @knowns.clone )
-  end
-
-  # ---- String repr ---- #
-  def to_s
-    if @knowns.empty?
-      stack_s
-    elsif @stack.empty?
-      knowns_s
-    else
-      "( #{stack_s}, #{knowns_s} )"
-    end
-  end
-
-  def stack_s
-    "[#{@stack.join(', ')}]"
-  end
-
-  def knowns_s
-    "{#{@knowns.collect{ |k, v| "#{k}: #{v}" }.join(', ')}}"
-  end
-
-  def inspect
-    "#{self.class}( #{@stack}, #{@knowns} )"
-  end
-
-  # ---- Array methods ---- #
-
-  def empty?
-    @stack.empty?
-  end
-
-  def <<(value)
-    @stack << value
-  end
-
+  # --- Array Methods --- #
   def pop
-    self >> 1
+    @stack.pop
   end
 
-  def >>(pos)
-    @stack.delete_at(-pos)
+  def push(value)
+    @stack.push(value)
   end
 
-  # ---- Hash methods ---- #
-  def [](key)
-    @knowns[key]
+  # --- Hash Methods --- #
+  def [](item)
+    begin
+      raise ArgumentError, "Knons & stack have valid `#{item}`" if @knowns[item] && @stack[item]
+    rescue TypeError => e
+      # ignore
+    end
+
+    @knowns[item] || @stack[item]
   end
 
-  def []=(key, value)
-    @knowns[key] = value
+  def []=(item, value)
+    @knowns[item] = value
   end
 
-  # ---- Function methods ---- #
-
-  def call(args:, results:)
-    results.merge!(args) #should this be cloned first?
-    iter = @stack.each
-    loop {
-      case (token = iter.next)
-      when Keyword::Newline then handle_newline(results: results, iter: iter, token: token)
-      when Keyword::Get     then handle_get(    results: results, iter: iter, token: token)
-      when Keyword::Call    then handle_call(   results: results, iter: iter, token: token)
-      when Keyword::This    then handle_this( results: results, iter: iter, token: token)
-      else                       handle_else(   results: results, iter: iter, token: token)
+  # --- Proc Methods --- #
+  def call(result:)
+    body = @stack.each
+    loop do
+      if (token = body.next).is_a? Keyword
+        token.process(body: body, result: result)
+      else
+        result.stack << token
       end
-    }
+    end
+    result
   end
 
-  private
-
-  def handle_newline(results:, iter:, token:)
-    results.pop
+  # --- Repr Methods --- #
+  def to_s
+    "<#{@stack} | #{@knowns}>"
   end
 
-  def handle_this(results:, iter:, token:)
-    results << results.clone
-  end
 
-  def handle_call(results:, iter:, token:)
-    func = results.pop
-    args = iter.next
-    arg_results = self.class.new
-    args.call(args: results, results: arg_results)
-    func_results = results
-    func.call(args: arg_results, results: results)
-  end
-
-  def handle_get(results:, iter:, token:)
-    fail if results.empty?
-    key   = results.pop
-    value = results[key]
-    raise NameError, "Undefined token `#{key}`" unless value
-    results << value
-  end
-
-  def handle_else(results:, iter:, token:)
-    results << token
-  end
 end
 
 
-
-# Object = {
-#   init = {
-#     { cls = cls! }.update( args! )
-#   }
-# }
-
-# Car = {
-#   init = {
-#     cls!.super_cls!.init(args = {maker = maker!})
-#   }
-
-#   super_cls = Object
-#   wheels = 4
-# }
-
-# Car!.wheels # => 4
-# c = Car!.init(cls = Car!, maker = 'honda') # => {maker = 'honda', **Car}
-# c.maker  # => 'honda'
-# c.wheels # => 4
-
-
+get = Keyword::Get.new; call = Keyword::Call.new; newl = Keyword::Newline.new
 body = Container.new(stack: [
-  :eql,
-  Keyword::Get.new,
-  Keyword::Call.new,
-  Container.new
-
+  # :foo, call, :a,           # foo @ (5)
+  # :car, :eql, get, call, :a # car =@ a
+  # car foo @ 5!  :car, :foo, call, :ten, get,
+  # :Car,
+  #   :eql, get, call,
+  # Container.new(stack: [
+  #   :wheels, 
+  #     :eql, get, call,
+  #   4,
+  #   newl,
+  #   :result,
+  #     :eql, get, call,
+  #   Container.new(stack: [
+  #     4,
+  #       :+, get, call,
+  #     5,
+  #   ]), call, Container.new,
+  #     :*, get, call,
+  #   3
+  # ])
 ])
+
 
 require_relative '../std/operators'
 args = Container.new(knowns: {
-    eql:  Std::Functions::Operators::Assign,
+    eql: Std::Functions::Operators::Assign,
+    ten: 10,
 })
 
-results = Container.new
-body.call(args: args, results: results)
-puts results
+result = body.call(result: args)
+puts result.stack
 
 
 
