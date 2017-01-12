@@ -25,16 +25,20 @@ module Std
         end
       },
       'Numbers': proc{ |results:, parser:| 
-        parser.options[:get_identifier] = lambda do |sym| 
+        parser.options[:get_identifier].unshift proc{ |sym, results| 
           begin
-            Float(sym.to_s)
+            results << Float(sym.to_s)
           rescue ArgumentError => e
-            sym
+            nil
           end
-        end
+        }
       },
-      'Infix': proc{ |*names, results:, parser:| 
-        parser.options[:infixes].concat(names)
+      'Operators': proc{ |*names, results:, parser:| 
+        parser.options[:get_identifier].unshift lambda{ |sym, results|
+          if results.knowns.include?(sym) && results[sym].is_a?(Std::Functions::Operators::Operator)
+            results << sym << Keyword::Get.new << Keyword::Call.new
+          end
+        }
       }
       
     }

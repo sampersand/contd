@@ -7,17 +7,20 @@ class Parser
 
   def initialize(**options)
     @options = options
-    @options[:keywords] ||= {'!': Keyword::Get, '@': Keyword::Call }
+    @options[:keywords] ||= {'!': Keyword::Get,
+                             '@': Keyword::Call,
+                             ';': Keyword::Newline,
+                             '$': Keyword::This, }
     @options[:commands] ||= Std::PreCommands
-    @options[:infixes] ||= []
+    @options[:get_identifier] ||= [proc{ |s, results| results << s }]
   end
 
   def parse(body)
     results = Container.new
     # body = parse_precommands(body, results)
-    results = parse_body(body.each_char, results)
-    parse_infixes(results)
+    parse_body(body.each_char, results)
   end
+
   def parse_body(iter, results)
     token = ''
     loop do
@@ -80,7 +83,7 @@ class Parser
   # container
     def handle_container(token, results, iter)
       handle_token(token.chop!, results, iter)
-      results << parse_body(iter, results.class.new)
+      results << parse_body(iter, results.class.new(knowns: results.knowns.clone))
     end
 
     def begin_container?
@@ -102,7 +105,7 @@ class Parser
     def break_apart_token(token, results)
       # DANGEROUS. THIS IS WILL NOT WORK FOR MORE ABSTRACT STUFF
       whitespace = " \n\t".chars
-      break_ons = "@!+-*/=^".chars + whitespace
+      break_ons = "@!+-*/=^$".chars + whitespace
       # this should split at whitespace and defined operators.
       res = [token]
       break_ons.each do |sym_to_break_on| 
@@ -111,29 +114,33 @@ class Parser
           # 'a+b+c'.partition(/+/) --> ['a', '+', 'b+c']
         end.flatten!.delete_if(&:empty?)
       end
-      res.reject!(&whitespace.method(:include?)).collect!(&:to_sym)
+      res.reject!(&whitespace.method(:include?))
+      res.collect!(&:to_sym)
       token.clear
       res
     end
 
     def process_single_sym(sym, results)
-      results << if is_sym_a_keyword? sym
-                   get_keyword(sym)
-                 else
-                   get_identifier(sym)
-                 end
+      if is_sym_a_keyword? sym
+        get_keyword(sym, results)
+      else
+        get_identifier(sym, results)
+      end
     end
 
       def is_sym_a_keyword?(sym)
         @options[:keywords].include?(sym)
       end
 
-      def get_keyword(sym)
-        @options[:keywords][sym].new
+      def get_keyword(sym, results)
+        results << @options[:keywords][sym].new
       end
 
-      def get_identifier(sym)
-        (@options[:get_identifier] || proc{ |a| a }).call(sym)
+      def get_identifier(sym, results)
+        @options[:get_identifier].each{ |func| 
+          res = func.call(sym, results)
+          break res if res
+        }
       end
 end
 
@@ -145,22 +152,37 @@ parser = Parser.new
 
 
 body = parser.parse('''#
-#! Include Add=+ Sub Mul=*
+#! Include Add=+
+#! Include Mul=*
+#! Include Assign==
+#! Include Index=.
 #! Numbers
-#! Infix +
-33 *! 4 @
+#! Operators
+=(car {
+  =(wheels 2);
+  # =(fuel 4);
+  # =(honk {
+  #   disp!@{ \'beep beep\'};
+  # });
+  $
+});
+.(car!@{} wheels)
 ''')
 puts '----'
-p body
+puts body
 puts '----'
 
 
 results = Container.new
 body.call(args: body, results: results)
-puts results
+require 'pp'
+pp results.knowns
 
 
 
+
+# 1 + (2 * (3 / 4 @) @) @
+# 1 +! 2 *! 3 /! 4 @ @ @
 
 
 

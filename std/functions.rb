@@ -5,7 +5,10 @@ module Std
     end
 
     def inspect
-      "#{self.class.name}"
+      "#{self.class}"
+    end
+    def to_s
+      self.class.name.split('::')[-1]
     end
 
     def call(args:, results:)

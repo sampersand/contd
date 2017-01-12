@@ -17,6 +17,7 @@ class Container
     #does the stack even matter??
     # @stack = other.stack.concat(@stack)#.concat(other.stack)
     # p @stack
+    # @stack = @stack.clone.concat(other.stack)
     # @stack.concat(other.stack)
     @knowns.update(other.knowns)
     self
@@ -87,6 +88,7 @@ class Container
       when Keyword::Newline then handle_newline(results: results, iter: iter, token: token)
       when Keyword::Get     then handle_get(    results: results, iter: iter, token: token)
       when Keyword::Call    then handle_call(   results: results, iter: iter, token: token)
+      when Keyword::This    then handle_this( results: results, iter: iter, token: token)
       else                       handle_else(   results: results, iter: iter, token: token)
       end
     }
@@ -98,17 +100,17 @@ class Container
     results.pop
   end
 
+  def handle_this(results:, iter:, token:)
+    results << results.clone
+  end
+
   def handle_call(results:, iter:, token:)
     func = results.pop
-    if func.is_a?(Proc)
-      args = Container.new(stack: [results.pop, iter.next])      
-    else
-      args = iter.next
-    end
-
-    call_results = self.class.new
-    args.call(args: results, results: call_results)
-    func.call(args: call_results, results: results)
+    args = iter.next
+    arg_results = self.class.new
+    args.call(args: results, results: arg_results)
+    func_results = results
+    func.call(args: arg_results, results: results)
   end
 
   def handle_get(results:, iter:, token:)
@@ -126,19 +128,43 @@ end
 
 
 
-body = Container.new(stack: [1, :-, Keyword::Get.new, Keyword::Call.new, 2])
-args = Container.new(knowns: {'-': proc { |args:, results:| results << (args >> 2) - (args >> 1) }})
+# Object = {
+#   init = {
+#     { cls = cls! }.update( args! )
+#   }
+# }
+
+# Car = {
+#   init = {
+#     cls!.super_cls!.init(args = {maker = maker!})
+#   }
+
+#   super_cls = Object
+#   wheels = 4
+# }
+
+# Car!.wheels # => 4
+# c = Car!.init(cls = Car!, maker = 'honda') # => {maker = 'honda', **Car}
+# c.maker  # => 'honda'
+# c.wheels # => 4
+
+
+body = Container.new(stack: [
+  :eql,
+  Keyword::Get.new,
+  Keyword::Call.new,
+  Container.new
+
+])
+
+require_relative '../std/operators'
+args = Container.new(knowns: {
+    eql:  Std::Functions::Operators::Assign,
+})
+
 results = Container.new
 body.call(args: args, results: results)
 puts results
-puts args
-
-
-
-
-
-
-
 
 
 
