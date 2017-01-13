@@ -1,14 +1,15 @@
-class StackIter
-  def initialize(stack)
-    @stack = stack
+class Options
+  def process_token(token:, body:, result:)
+    case token
+    when Keyword
+      token.process(body: body, result: result)
+    else
+      result.stack << token
+    end
   end
 
-  def peek(priority:)
-    clone.next(priority: priority)
-  end
-
-  def next(priority:)
-    res = Container.new
+  def next_token(priority:)
+    res = Container.new(options: self)
     loop do 
       break unless @stack[0]
       break if get_priority(res.push(@stack.shift)[-1]) >= priority
@@ -26,21 +27,5 @@ class StackIter
     else 0
     end
   end
+
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
