@@ -1,46 +1,33 @@
-# Object = {
-#   init = {
-#     { cls = cls! }.update( args! )
-#   }
-# }
+class Object
+  def imp
+    case self
+    when :** then 3
+    when :* then 2
+    when :+ then 1
+    else 4
+    end
+  end
+end
 
-# Car =!@ {
-#   init =!@ {
-#     cls!.super_cls!.init(args =!@ {maker =!@ maker!})
-#   }
+a = [0, :+, 1, :*, 2, :+, 3]
+a = [0, :*, 1, :+, 2, :+, 3]
 
-#   super_cls =!@ Object
-#   wheels =!@ 4
-# }
+def next_priority(arr, sym)
+  res = []
+  until arr.empty?
+    if (sym.imp) < arr.first.imp
+      res << arr.shift
+    else
+      break
+    end
+  end
+  res
+end
 
-# Car!.wheels # => 4
-# c =!@ Car!.init(cls =!@ Car!, maker =!@ 'honda') # => {maker =!@ 'honda', **Car}
-# c.maker  # => 'honda'
-# c.wheels # => 4
-
-
-
-require_relative 'core/options'
-require_relative 'core/container'
-body = Container.new(stack: [
-  :car,
-    :'=',
-  :ten, :'!',
-  # Container.new(stack: [:TEN, :eql, :'!', :ten, :'!',])
-])
-
-
-args = Container.new(knowns: {
-    :'=' => proc{ |result:| result.push (result[result.delete_at(-2)] = result.pop); exit(1)},
-    ten: 10,
-})
-
-result = body.call(result: args, options: Options)
-p result
-
-
-
-
+p next_priority(a.clone, :+).join(' ')
+p next_priority(a.clone, :*).join(' ')
+p next_priority(a.clone, :**).join(' ')
+p next_priority(a.clone, :/).join(' ')
 
 
 
