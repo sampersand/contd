@@ -24,7 +24,7 @@ module Std
       GreaterThanOrEqual = Operator.new { |args:, results:| results << (args >> 2) >= (args >> 1) }
       LessThanOrEqual    = Operator.new { |args:, results:| results << (args >> 2) <= (args >> 1) }
 
-      Assign = Operator.new { |args:, results:| results << (results[args >> 2] = (args >> 1)) }
+      Assign = Operator.new { |results:| results << (results[results >> 2] = (results >> 1)) }
       Index = Operator.new { |args:, results:| 
         results << (args >> 2)[args >> 1] }
     end

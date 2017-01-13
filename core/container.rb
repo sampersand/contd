@@ -1,5 +1,6 @@
-require_relative 'keyword'
 class Container
+  require_relative 'keyword'
+  require_relative 'stack_iter'
 
   attr_reader :stack, :knowns
   def initialize(stack: nil, knowns: nil)
@@ -13,14 +14,27 @@ class Container
     @knowns.update other.knowns
   end
 
+  def clone
+    self.class.new(stack: @stack.clone, knowns: @knowns.clone)
+  end
+
   # --- Array Methods --- #
   def pop
     @stack.pop
   end
 
+  def delete_at(pos)
+    @stack.delete_at(pos)
+  end
+
   def push(value)
     @stack.push(value)
   end
+
+  def to_a
+    @stack.collect{ |e| e.respond_to?(:to_a) ? e.to_a : e }
+  end
+
 
   # --- Hash Methods --- #
   def [](item)
@@ -30,7 +44,7 @@ class Container
       # ignore
     end
 
-    @knowns[item] || @stack[item]
+    @knowns[item]# || @stack[item]
   end
 
   def []=(item, value)
@@ -39,9 +53,16 @@ class Container
 
   # --- Proc Methods --- #
   def call(result:)
-    body = @stack.each
+    body = StackIter.new @stack
+    i = 0
     loop do
-      if (token = body.next).is_a? Keyword
+      i += 1; fail if i > 100
+      token = body.next(priority: 0)
+        raise(token.to_s) unless token.stack.length <= 1
+        token = token.stack[0]
+        break unless token
+      case token
+      when Keyword
         token.process(body: body, result: result)
       else
         result.stack << token
@@ -52,9 +73,9 @@ class Container
 
   # --- Repr Methods --- #
   def to_s
-    "<#{@stack} | #{@knowns}>"
+    "<#{@stack.reject{ |_, v| v.is_a?(Proc)}} | #{@knowns.reject{ |_, v| v.is_a?(Proc)}}>"
   end
-
+  alias :inspect :to_s
 
 end
 
@@ -63,7 +84,13 @@ get = Keyword::Get.new; call = Keyword::Call.new; newl = Keyword::Newline.new
 body = Container.new(stack: [
   # :foo, call, :a,           # foo @ (5)
   # :car, :eql, get, call, :a # car =@ a
-  # car foo @ 5!  :car, :foo, call, :ten, get,
+  :car,
+    :eql, get, call,
+  Container.new(stack: [
+        :TEN,
+          :eql, get, call,
+        :ten, get
+  ]), call,
   # :Car,
   #   :eql, get, call,
   # Container.new(stack: [
@@ -86,12 +113,12 @@ body = Container.new(stack: [
 
 require_relative '../std/operators'
 args = Container.new(knowns: {
-    eql: Std::Functions::Operators::Assign,
+    eql: proc{ |result:| result.push (result[result.delete_at(-2)] = result.pop).to_s },
     ten: 10,
 })
 
 result = body.call(result: args)
-puts result.stack
+p result
 
 
 
