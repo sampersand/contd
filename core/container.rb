@@ -64,70 +64,30 @@ class Container
     end
 
   # --- Execution --- #
-  def call!(rename_me:)
-    fail 'Do not run `call` on a Container with rename_me' unless @known.empty?
-    until @stack.empty?
-      case token = shift
-      when Keyword::Newline
-        rename_me.pop # and do nothing
-      when Keyword::Get
-        to_get = rename_me.pop
-        result = rename_me[to_get]
-        raise "No such known `#{to_get}` found" unless result
-        rename_me.push result
-      when Keyword::Call
-        func = rename_me.pop
-        func.call(rename_me: rename_me)
-      else
-        fail "Unknown keyword #{token}" if token.is_a?(Keyword)
-        rename_me.push token
+    def call!(rename_me:)
+      fail 'Do not run `call` on a Container with rename_me' unless @known.empty?
+      until @stack.empty?
+        case token = shift
+        when Keyword::Newline
+          rename_me.pop # and do nothing
+        when Keyword::Get
+          to_get = rename_me.pop
+          result = rename_me[to_get]
+          raise "No such known `#{to_get}` found" unless result
+          rename_me.push result
+        when Keyword::Call
+          func = rename_me.pop
+          func.call(rename_me: rename_me)
+        else
+          fail "Unknown keyword #{token}" if token.is_a?(Keyword)
+          rename_me.push token
+        end
       end
+      rename_me
     end
-    rename_me
-  end
 
-  def call(rename_me:)
-    clone.call!(rename_me: rename_me)
-  end
+    def call(rename_me:)
+      clone.call!(rename_me: rename_me)
+    end
 
 end
-
-
-body = Container.new(stack: [
-  Container.new(stack:[
-    :a, :ten, Keyword::Get.new
-  ]),
-  :eql, Keyword::Get.new, Keyword::Call.new
-])
-rename_me = Container.new(known: {
-  ten: 10,
-  eql: Class.new(Proc){
-          def to_s
-            "< eql >"
-          end
-          alias :inspect :to_s
-        }.new do |rename_me:|
-          raw_args = rename_me.pop
-          args = raw_args.call(rename_me: rename_me.clone)
-          rename_me[args.shift] = args.shift
-        end
-})
-
-p body.call(rename_me: rename_me)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

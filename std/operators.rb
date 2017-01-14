@@ -32,6 +32,46 @@ module Std
 end
 
 
+# body = Container.new(stack: [
+#   Container.new(stack:[
+#     :a, :ten, Keyword::Get.new
+#   ]),
+#   :eql, Keyword::Get.new, Keyword::Call.new
+# ])
+# rename_me = Container.new(known: {
+#   ten: 10,
+#   eql: Class.new(Proc){
+#           def to_s
+#             "< eql >"
+#           end
+#           alias :inspect :to_s
+#         }.new do |rename_me:|
+#           raw_args = rename_me.pop
+#           args = raw_args.call(rename_me: rename_me.clone)
+#           rename_me[args.shift] = args.shift
+#         end
+# })
+
+# p body.call(rename_me: rename_me)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
