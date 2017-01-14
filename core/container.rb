@@ -10,7 +10,9 @@ class Container
   # --- Stack Functions --- #
     def pop; @stack.pop end
     def push(obj) @stack.push obj end
-    def delete_at(pos) @stack.delete_at(pos) end
+    def delete_at(pos) @stack.delete_at pos end
+    def shift; @stack.shift end
+    def unshift(obj) @stack.unshift obj end
     alias :<< :push
 
     def to_a
@@ -62,34 +64,70 @@ class Container
     end
 
   # --- Execution --- #
-  def call!(args:)
-    fail 'Do not run `call` on a Container with args' unless @known.empty?
+  def call!(rename_me:)
+    fail 'Do not run `call` on a Container with rename_me' unless @known.empty?
     until @stack.empty?
-      case(token = pop)
+      case token = shift
       when Keyword::Newline
-        args.pop # and do nothing
+        rename_me.pop # and do nothing
       when Keyword::Get
-        #pass
+        to_get = rename_me.pop
+        result = rename_me[to_get]
+        raise "No such known `#{to_get}` found" unless result
+        rename_me.push result
       when Keyword::Call
-        # pass
+        func = rename_me.pop
+        func.call(rename_me: rename_me)
       else
         fail "Unknown keyword #{token}" if token.is_a?(Keyword)
-        args << token
+        rename_me.push token
       end
     end
-    args
+    rename_me
   end
 
-  def call(args:)
-    clone.call!(args: args)
+  def call(rename_me:)
+    clone.call!(rename_me: rename_me)
   end
 
 end
 
 
-body = Container.new(stack: [:ten, :'!'])
-args = Container.new(known: {ten: 10})
+body = Container.new(stack: [
+  Container.new(stack:[
+    :a, :ten, Keyword::Get.new
+  ]),
+  :eql, Keyword::Get.new, Keyword::Call.new
+])
+rename_me = Container.new(known: {
+  ten: 10,
+  eql: Class.new(Proc){
+          def to_s
+            "< eql >"
+          end
+          alias :inspect :to_s
+        }.new do |rename_me:|
+          raw_args = rename_me.pop
+          args = raw_args.call(rename_me: rename_me.clone)
+          rename_me[args.shift] = args.shift
+        end
+})
 
-p body.call(args: args)
+p body.call(rename_me: rename_me)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
