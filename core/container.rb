@@ -1,4 +1,5 @@
 class Container
+  require_relative 'keyword'
   # --- Constructor & Attrs --- #
     attr_reader :known, :stack, :config
     def initialize(stack: [], known: {})
@@ -65,12 +66,15 @@ class Container
     fail 'Do not run `call` on a Container with args' unless @known.empty?
     until @stack.empty?
       case(token = pop)
-      when %r(\+-\*/\^%)
-        puts 'DEAL WITH OPER'
-      when /!/
-        puts 'DEAL WITH GET'
+      when Keyword::Newline
+        args.pop # and do nothing
+      when Keyword::Get
+        #pass
+      when Keyword::Call
+        # pass
       else
-        puts 'DEAL WITH ELSE'
+        fail "Unknown keyword #{token}" if token.is_a?(Keyword)
+        args << token
       end
     end
     args
