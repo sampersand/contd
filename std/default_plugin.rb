@@ -2,9 +2,7 @@ require_relative 'options'
 
 module Std
 
-  private 
-
-  class PluginClass
+  class DefaultPlugin
     attr_reader :options
 
     def self.option_method(sym)
@@ -33,7 +31,6 @@ module Std
         nil until end_comment? === iter.next
       when keyword?
         result << (get_keyword token or raise "No keyword found for `#{token}`")
-
       else
         result << token
       end
@@ -42,10 +39,6 @@ module Std
 
     end
   end
-
-  public
-
-  Plugin = PluginClass.new Options
 
 end
 

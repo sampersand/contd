@@ -2,8 +2,6 @@ require_relative 'options'
 
 module Std
 
-  private 
-
   class NumericPlugin
 
     def handle_token(token, result, iter)
@@ -13,7 +11,6 @@ module Std
       when /\d+\.\d+/
         result << token.to_f
       end
-
     end
   end
 
