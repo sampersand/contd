@@ -1,41 +1,45 @@
 class Parser
   require_relative 'container'
 
-  attr_reader :options
-  def initialize(*options)
-    @options = options
-  end
+  # --- Attributes and Class methods --- #
+    attr_reader :plugins
 
-  def option_method(sym, *a, &b)
-    result = nil
-    @options.each do |option|
-      next unless option.respond_to?(sym)
-      result = option.method(sym).call(*a, &b)
-      break if result
+    def self.plugin_method(sym)
+      define_method(sym) do |*a, &b|
+        @plugins.each do |plugin|
+          next unless plugin.respond_to?(sym)
+          res = plugin.method(sym).call(*a, &b) and return res
+        end
+        nil
+      end
     end
-    result
-  end
 
-  def each_token(input, &block)
-    option_method(:each_token, input, &block)
+
+    plugin_method :each_token
+    plugin_method :handle_token
+
+
+  def initialize(*plugins)
+    @plugins = plugins
   end
 
   def parse(input)
     result = Container.new
-    each_token(input) do |token|
-      
+    iter = each_token(input) or fail "No usable `each_token` found!"
+    loop do 
+      token = iter.next
+      handle_token(token, result, iter) or fail("Cannot process token `#{token}`")
     end
+    result
   end
 
 end
 
-require_relative '../std/options'
-input = 'x = 3'
 
 
-parser = Parser.new(Std::Options.new)
-res = parser.parse(input)
-p res
+
+
+
 
 
 

@@ -1,7 +1,15 @@
 module Std
-  class Options
-    def each_token(input, &block)
-      input.each_char(&block)
+
+  private 
+
+  class OptionsClass
+    def whitespace?(token)
+      /\s/ =~ token
     end
   end
+
+  public
+
+  Options = OptionsClass.new
+
 end
