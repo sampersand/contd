@@ -9,7 +9,7 @@ module Comment
     module_function
 
     def process_stream(**kwargs)
-      CommentSharedFunctions::process_stream(comment: self, **kwargs)
+      CommentSharedFunctions::process_stream(plugin: self, **kwargs)
     end
 
   end

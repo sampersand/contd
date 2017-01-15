@@ -9,7 +9,7 @@ module Containers
     module_function
 
     def process_stream(**kwargs)
-      ContainersSharedFunctions::process_stream(container: self, **kwargs)
+      ContainersSharedFunctions::process_stream(plugin: self, **kwargs)
     end
 
   end

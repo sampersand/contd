@@ -1,12 +1,14 @@
 module ContainersSharedFunctions
+
   module_function
-  def process_stream(container:, stream:, result:, parser:, **_)
-      return unless stream.peek == container::START
+
+  def process_stream(plugin:, stream:, result:, parser:, **_)
+      return unless stream.peek == plugin::START
 
       stream.next # pop START
 
       body = ''
-      body += stream.next until stream.peek == container::STOP
+      body += stream.next until stream.peek == plugin::STOP
 
       stream.next # pop STOP
 
@@ -17,4 +19,5 @@ module ContainersSharedFunctions
       raise stream.class::EOFError,
             "Reached end of stream whilst looking for end of container (`#{STOP}`)"
   end
+
 end
