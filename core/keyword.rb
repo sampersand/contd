@@ -1,10 +1,14 @@
 class Keyword
+  def initialize(name=nil)
+    @name = name.to_s if name
+  end
+
   def to_s
-    self.class.name.split('::').last
+    @name or self.class.name.split('::').last
   end
 
   def inspect
-    "#{self.class}"
+    @name and "#{self.class}( #{@name.inspect} )" or "#{self.class}"
   end
 end
 

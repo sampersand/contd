@@ -29,7 +29,8 @@
 require_relative 'core/parser'
 require_relative 'std'
 
-input = 'x = 3'
+input = '''#x = 3; y = 4!
+'''
 
 
 parser = Parser.new Std::Plugin

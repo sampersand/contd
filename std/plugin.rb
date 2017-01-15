@@ -18,17 +18,22 @@ module Std
     end
 
     option_method :whitespace?
-    option_method :comment?
+    option_method :start_comment?
     option_method :end_comment?
+    option_method :keyword?
+    option_method :get_keyword
 
     def initialize(*options) @options = options end
     def each_token(input, &block) input.each_char(&block) end
 
     def handle_token(token, result, iter)
-      case
-      when whitespace?(token) # do nothing
-      when comment?(token)
-        iter.next until end_comment?(iter.peek)
+      case token
+      when whitespace? # do nothing
+      when start_comment?
+        nil until end_comment? === iter.next
+      when keyword?
+        result << (get_keyword token or raise "No keyword found for `#{token}`")
+
       else
         result << token
       end
