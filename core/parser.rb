@@ -1,23 +1,44 @@
-module Parser
-  require_relative '../core/container'
+class Parser
+  require_relative 'container'
 
-  module_function
+  attr_reader :options
+  def initialize(*options)
+    @options = options
+  end
 
+  def option_method(sym, *a, &b)
+    result = nil
+    @options.each do |option|
+      next unless option.respond_to?(sym)
+      result = option.method(sym).call(*a, &b)
+      break if result
+    end
+    result
+  end
 
-  def parse(input, options)
+  def each_token(input, &block)
+    option_method(:each_token, input, &block)
+  end
+
+  def parse(input)
     result = Container.new
-    iter = input.each
-    
+    each_token(input) do |token|
+      
+    end
   end
 
 end
-
-
 
 require_relative '../std/options'
 input = 'x = 3'
 
 
-option = Options.new
-res = Parser::parse(input, option)
+parser = Parser.new(Std::Options.new)
+res = parser.parse(input)
 p res
+
+
+
+
+
+
