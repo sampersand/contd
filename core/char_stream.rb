@@ -39,10 +39,11 @@ class CharStream
     @chars.clone
   end
 
-  def next_while(&block)
-    raise "No block given!" unless block_given?
-    res = []
-    res << self.next while block.(peek, res, self) && !empty?
-    res
-  end
 end
+
+
+
+
+
+
+

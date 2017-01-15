@@ -1,38 +1,12 @@
+require_relative 'text/single_quote'
+require_relative 'text/double_quote'
+
 module Text
 
   module_function
 
-  QUOTE_REGEX = /['"]/
-  ESCAPE_CHAR = /\\/
-  STRING_REGEX = /^(#{QUOTE_REGEX}).+(?<!#{ESCAPE_CHAR})\1$/
-
-  def next_token(stream:, **_)
-    return unless QUOTE_REGEX =~ stream.peek
-    start_quote = stream.next
-    res = start_quote
-    loop do
-      case res += stream.next
-      when 
-      end
-    end
+  def process_stream(**kwargs)
+    Text::SingleQuote.process_stream(**kwargs) || Text::DoubleQuote.process_stream(**kwargs)
   end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+end

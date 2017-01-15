@@ -4,8 +4,9 @@ module Number
     module_function
 
     def process_stream(stream:, result:, **_)
-      return unless /\d/ =~ stream.peek
-      result << stream.next_while{ |char| /[\d]/ =~ stream.peek }.join.to_i
+      res = ''
+      res << stream.next while /\d/ =~ stream.peek 
+      res.empty? ? nil : result << res.to_i
     end
 
   end
