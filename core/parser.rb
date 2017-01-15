@@ -11,17 +11,16 @@ class Parser
   end
 
   attr_reader :plugins
+  attr_reader :master_known
 
   def initialize(*plugins)
     @plugins = plugins + [DefaultPlugin]
+    @master_known = Container.new
   end
 
   def add(plugin)
-    if plugin.respond_to?(:add_to_parser)
-      plugin.add_to_parser(parser: self)
-    else
-      @plugins.unshift plugin
-    end
+    @plugins.unshift plugin
+    plugin.added_to_parser(self) if plugin.respond_to?(:added_to_parser)
   end
 
   def parse(input)
