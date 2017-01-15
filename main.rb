@@ -30,32 +30,34 @@ require_relative 'core/parser'
 
 input = '
 x = 3;
-y = \'4.5\'
+(y = \'4.5\')
 #foo
+/* bar
+baz */
 y = "4.5"
 z = ten0_1 !
 w = 
 ab
 '
-# input = '3 (1 2)'
-# require_relative 'plugins/number'
-# require_relative 'plugins/whitespace'
+  input = '1 + 2 * 3'
+require_relative 'plugins/number'
+require_relative 'plugins/whitespace'
 require_relative 'plugins/text'
 require_relative 'plugins/keywords'
-# require_relative 'plugins/variable'
+require_relative 'plugins/variable'
 require_relative 'plugins/comment'
-# require_relative 'plugins/operator'
-# require_relative 'plugins/containers'
+require_relative 'plugins/operator'
+require_relative 'plugins/containers'
 
 parser = Parser.new
 parser.add Text
-# parser.add Variable
-# parser.add Number
-# parser.add Whitespace
+parser.add Variable
+parser.add Number
+parser.add Whitespace
 parser.add Keywords
 parser.add Comment
-# parser.add Operator
-# parser.add Containers
+parser.add Operator
+parser.add Containers
 
 res = parser.parse(input)
 p res

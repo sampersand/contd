@@ -9,11 +9,14 @@ module Operator
 
     def process_stream(stream:, result:, parser:, **_)
       return unless stream.peek == VALUE
-      left = result.pop
+      args = Container.new
+      args << result.pop
       name = stream.next
-      Operator::
-      right = parser.process_stream(stream: stream, result: result) # WARNING: WILL FAIL WITH `a!`
-      p right
+      i = 0
+      loop do 
+      p parser.process_stream(stream: stream, result: args) # WARNING: WILL FAIL WITH `a!`
+      p stream
+      p args
       exit
       result << stream.nextKeyword::Call.new(stream.next)
     end
