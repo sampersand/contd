@@ -6,8 +6,8 @@ module Text
   module_function
 
   def process_stream(**kwargs)
-    Text::SingleQuote.process_stream(**kwargs) ||
-    Text::DoubleQuote.process_stream(**kwargs)
+    SingleQuote.process_stream(**kwargs) ||
+    DoubleQuote.process_stream(**kwargs)
   end
 
 end

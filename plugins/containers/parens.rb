@@ -7,14 +7,15 @@ module Containers
 
     def process_stream(stream:, result:, parser:, **_)
       return unless stream.peek == START
-      
-      res = Container.new
 
-      res << parser.process_stream(stream: stream, result: res)
-      p res
-      exit
-      stream.next until stream.peek == STOP
-      stream.next(2) #to remove the STOP
+      stream.next # pop START
+
+      body = ''
+      body += stream.next until stream.peek == STOP
+
+      stream.next # pop STOP
+
+      result << parser.parse(body)
 
       true
     rescue stream.class::EOFError => e

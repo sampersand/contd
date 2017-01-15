@@ -7,9 +7,9 @@ module Keywords
   module_function
 
   def process_stream(**kwargs)
-    Keywords::Get.process_stream(**kwargs) ||
-    Keywords::Call.process_stream(**kwargs) ||
-    Keywords::Newline.process_stream(**kwargs)
+    Get.process_stream(**kwargs) ||
+    Call.process_stream(**kwargs) ||
+    Newline.process_stream(**kwargs)
 
   end
 

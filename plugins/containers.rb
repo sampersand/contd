@@ -7,9 +7,9 @@ module Containers
   module_function
 
   def process_stream(**kwargs)
-    Keywords::Brackets.process_stream(**kwargs) ||
-    Keywords::Parens.process_stream(**kwargs) ||
-    Keywords::Braces.process_stream(**kwargs)
+    Brackets.process_stream(**kwargs) ||
+    Parens.process_stream(**kwargs) ||
+    Braces.process_stream(**kwargs)
 
   end
 
