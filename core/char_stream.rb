@@ -14,8 +14,8 @@ class CharStream
     self.class.new to_a
   end
 
-  def next
-    @chars.shift || fail(EOFError, "Reached end of stream!")
+  def next(amnt=1)
+    @chars.shift(amnt).join || fail(EOFError, "Reached end of stream!")
   end
 
   def feed(*vals)
@@ -27,7 +27,7 @@ class CharStream
   end
 
   def peek(amnt=1)
-    @chars[0, amnt].join
+    @chars.first(amnt).join
   end
 
   def reset_to other_stream

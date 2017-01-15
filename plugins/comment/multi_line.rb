@@ -7,7 +7,9 @@ module Comment
 
     def process_stream(stream:, result:, **_)
       return unless stream.peek(2) == START
-      nil until stream.next == STOP
+      stream.next until stream.peek(2) == STOP
+      stream.next(2) #to remove the STOP
+
       true
     rescue stream.class::EOFError => e
       raise stream.class::EOFError,
