@@ -1,4 +1,5 @@
 require_relative 'int'
+
 module Number
   module Decimal
 
@@ -6,7 +7,6 @@ module Number
 
     def next_token(stream:, **_)
       left = Int.next_token(stream: stream, **_)
-      p ['hai', left, stream]
       return unless left
       deci = stream.next
       unless deci == '.'
@@ -14,8 +14,7 @@ module Number
         return
       end
       right = Int.next_token(stream: stream, **_)
-      raise "#{left}#{deci}#{right}".to_f
-      raise
+      "#{left}#{deci}#{right}"
    end
 
     def handle_token(token:, result:, **_)

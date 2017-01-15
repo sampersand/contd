@@ -34,10 +34,9 @@ y = 4.5!
 '''
 input = '123.456'
 
-require_relative 'plugins/number/decimal'
+require_relative 'plugins/number'
 parser = Parser.new
-parser.add Number::Decimal
-parser.add Number::Int
+parser.add Number
 res = parser.parse(input)
 p res
 

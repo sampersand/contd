@@ -19,7 +19,11 @@ class Parser
   end
 
   def add(plugin)
-    @plugins.unshift plugin
+    if plugin.respond_to?(:add_to_parser)
+      plugin.add_to_parser(parser: self)
+    else
+      @plugins.unshift plugin
+    end
   end
 
   def parse(input)
