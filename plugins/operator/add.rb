@@ -10,7 +10,8 @@ module Operator
     def process_stream(stream:, result:, parser:, **_)
       return unless stream.peek == VALUE
       left = result.pop
-      var = stream.next
+      name = stream.next
+      Operator::
       right = parser.process_stream(stream: stream, result: result) # WARNING: WILL FAIL WITH `a!`
       p right
       exit

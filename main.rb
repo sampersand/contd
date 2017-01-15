@@ -37,7 +37,7 @@ z = ten0_1 !
 w = 
 ab
 '
-input = '1 + 2'
+input = '3 (1 2)'
 require_relative 'plugins/number'
 require_relative 'plugins/whitespace'
 require_relative 'plugins/text'

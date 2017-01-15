@@ -1,3 +1,4 @@
+require_relative 'shared_functions'
 module Containers
   module Parens
     
@@ -5,22 +6,8 @@ module Containers
     STOP  = ')'
     module_function
 
-    def process_stream(stream:, result:, parser:, **_)
-      return unless stream.peek == START
-
-      stream.next # pop START
-
-      body = ''
-      body += stream.next until stream.peek == STOP
-
-      stream.next # pop STOP
-
-      result << parser.parse(body)
-
-      true
-    rescue stream.class::EOFError => e
-      raise stream.class::EOFError,
-            "Reached end of stream whilst looking for end of paren container (`#{STOP}`)"
+    def process_stream(**kwargs)
+      SharedFunctions::process_stream(container: self, **kwargs)
     end
 
   end
