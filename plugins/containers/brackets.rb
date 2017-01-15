@@ -1,3 +1,5 @@
+require_relative 'shared_functions'
+
 module Containers
   module Brackets
     
