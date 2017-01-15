@@ -27,8 +27,8 @@ class Parser
     result = Container.new
     iter = input.each_char
     loop do 
-      token = next_token(iter) or fail "No valid token found for `#{token}`"
-      handle_token(token, result, iter) or fail "Cannot process token `#{token}`"
+      token = next_token(iter) || iter.next # default
+      handle_token(token, result, iter) || result << token # default
     end
     result
   end
