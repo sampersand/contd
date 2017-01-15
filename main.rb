@@ -29,9 +29,10 @@
 require_relative 'core/parser'
 
 input = '
-/*x = 3;
+x = 3;
 y = \'4.5\'
-z = ten0_1 */ !
+y = "4.5"
+z = ten0_1 !
 '
 # input = '"123.456"'
 
@@ -46,7 +47,7 @@ parser = Parser.new
 parser.add Text
 parser.add Variable
 parser.add Number
-# parser.add Whitespace
+parser.add Whitespace
 parser.add Keywords
 parser.add Comment
 

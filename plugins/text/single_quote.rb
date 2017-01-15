@@ -21,6 +21,9 @@ module Text
       end
       result << quote
       true
+    rescue stream.class::EOFError => e
+      raise stream.class::EOFError,
+            "Reached end of stream whilst looking for end of text (`#{QUOTE}`)"
     end
 
   end

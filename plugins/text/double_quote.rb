@@ -3,23 +3,27 @@ module Text
     
     module_function
 
-    QUOTE = '\"'
+    QUOTE = '"'
     ESCAPE = '\\'
 
     def process_stream(stream:, result:, **_)
       return unless stream.peek == QUOTE
-      res = ''
+      start_quote = stream.next
+      quote = start_quote # pop the starting quote
       loop do
-        res += case stream.peek
-                  when ESCAPE
-                    stream.next + stream.next
-                  when QUOTE
-                    break
-                  else
-                    stream.next
-                  end
+        quote += stream.next
+        case quote[-1]
+        when ESCAPE
+          quote += stream.next
+        when start_quote
+          break
+        end
       end
-      result << QUOTE + res + QUOTE
+      result << quote
+      true
+    rescue stream.class::EOFError => e
+      raise stream.class::EOFError,
+            "Reached end of stream whilst looking for end of text (`#{QUOTE}`)"
     end
 
   end
