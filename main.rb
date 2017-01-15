@@ -31,7 +31,7 @@ require_relative 'core/parser'
 input = '
 x = 3;
 y = \'4.5\'
-z = 0ten0_1!
+z = ten0_1!
 '
 # input = '"123.456"'
 
@@ -39,7 +39,8 @@ require_relative 'plugins/number'
 require_relative 'plugins/whitespace'
 require_relative 'plugins/text'
 require_relative 'plugins/keywords'
-require_relative 'plugins/Variable'
+require_relative 'plugins/variable'
+require_relative 'plugins/comment'
 
 parser = Parser.new
 parser.add Text
@@ -47,6 +48,7 @@ parser.add Variable
 parser.add Number
 parser.add Whitespace
 parser.add Keywords
+parser.add Comment
 
 res = parser.parse(input)
 p res
