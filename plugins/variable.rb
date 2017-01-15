@@ -6,12 +6,7 @@ module Variable
 
   def process_stream(stream:, result:,  **_)
     ret = ''
-    # ret += stream.next while VARIABLE_REGEX =~ ret + stream.peek && !stream.empty?
-    while VARIABLE_REGEX =~ ret + stream.peek && !stream.empty?
-      p "ret + stream.peek: #{ret + stream.peek}, VAR_IS= #{VARIABLE_REGEX =~ ret + stream.peek}"
-      ret += stream.next
-
-    end
+    ret += stream.next while VARIABLE_REGEX =~ ret + stream.peek && !stream.empty?
     ret.empty? ? nil : result << ret
   end
 end
