@@ -1,4 +1,6 @@
-module Keywords
+require_relative 'shared_functions'
+
+smodule Keywords
   module Newline
     VALUE = ';'
 
