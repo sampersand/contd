@@ -20,7 +20,7 @@ class Parser
 
   def add(plugin)
     @plugins.unshift plugin
-    plugin.added_to_parser(self) if plugin.respond_to?(:added_to_parser)
+    plugin.on_added(self) if plugin.respond_to?(:on_added)
   end
 
   def parse(input)
@@ -32,14 +32,11 @@ class Parser
     result
   end
 
-  private
-
   def process_stream(stream:, result:)
     @plugins.each do |plugin|
       res = plugin.process_stream(result: result, stream: stream, parser: self)
       return res if res
     end
-
   end
 
 end
