@@ -1,4 +1,4 @@
-require_relative 'options'
+require_relative 'default_options'
 
 module Std
 
@@ -21,8 +21,11 @@ module Std
     option_method :keyword?
     option_method :get_keyword
 
-    def initialize(*options) @options = options end
-    def each_token(input, &block) input.each_char(&block) end
+    def initialize(*options)
+      @options = options
+      @options << Std::DefaultOptions.new unless @options.any? { |e| e.is_a?(Std::DefaultOptions) }
+    end
+    def next_token(iter) iter.next end
 
     def handle_token(token, result, iter)
       case token

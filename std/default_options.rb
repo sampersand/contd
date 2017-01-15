@@ -1,8 +1,5 @@
 module Std
-
-  private 
-
-  class OptionsClass
+  class DefaultOptions
 
     KEYWORDS = {
       '@' => Keyword::Call,
@@ -23,12 +20,4 @@ module Std
     end
 
   end
-
-
-
-
-  public
-
-  Options = OptionsClass.new
-
 end

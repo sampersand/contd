@@ -29,11 +29,13 @@
 require_relative 'core/parser'
 require_relative 'std'
 
-input = '''#x = 3; y = 4!
+input = '''
+x = 3;
+y = 4.5!
 '''
 
 
-parser = Parser.new Std::Plugin
+parser = Parser.new(Std::NumericPlugin.new, Std::DefaultPlugin.new)
 res = parser.parse(input)
 p res
 

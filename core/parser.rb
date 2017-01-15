@@ -15,7 +15,7 @@ class Parser
     end
 
 
-    plugin_method :each_token
+    plugin_method :next_token
     plugin_method :handle_token
 
 
@@ -25,10 +25,10 @@ class Parser
 
   def parse(input)
     result = Container.new
-    iter = each_token(input) or fail "No usable `each_token` found!"
+    iter = input.each_char
     loop do 
-      token = iter.next
-      handle_token(token, result, iter) or fail("Cannot process token `#{token}`")
+      token = next_token(iter) or fail "No valid token found for `#{token}`"
+      handle_token(token, result, iter) or fail "Cannot process token `#{token}`"
     end
     result
   end
