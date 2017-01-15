@@ -27,15 +27,16 @@
 
 
 require_relative 'core/parser'
-require_relative 'std'
 
 input = '''
 x = 3;
 y = 4.5!
 '''
+input = '412.556'
 
-
-parser = Parser.new(Std::NumericPlugin.new, Std::DefaultPlugin.new)
+require_relative 'plugins/number/decimal'
+parser = Parser.new
+parser.add Number::Decimal
 res = parser.parse(input)
 p res
 

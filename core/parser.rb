@@ -1,36 +1,59 @@
 class Parser
   require_relative 'container'
 
-  # --- Attributes and Class methods --- #
-    attr_reader :plugins
-
-    def self.plugin_method(sym)
-      define_method(sym) do |*a, &b|
-        @plugins.each do |plugin|
-          next unless plugin.respond_to?(sym)
-          res = plugin.method(sym).call(*a, &b) and return res
-        end
-        nil
-      end
+  module DefaultPlugin
+    module_function
+    def next_token(stream:, **_)
+      stream.shift
     end
+    def handle_token(token:, result:, **_)
+      result << token
+    end
+  end
 
-
-    plugin_method :next_token
-    plugin_method :handle_token
-
+  attr_reader :plugins
 
   def initialize(*plugins)
-    @plugins = plugins
+    @plugins = plugins + [DefaultPlugin]
+  end
+
+  def add(plugin)
+    @plugins.unshift plugin
   end
 
   def parse(input)
     result = Container.new
-    iter = input.each_char
-    loop do 
-      token = next_token(iter) || iter.next # default
-      handle_token(token, result, iter) || result << token # default
+    stream = input.chars
+    until stream.empty?
+      token = next_token(stream: stream,
+                         result: result)
+      handle_token(token: token,
+                   result: result,
+                   stream: stream)
     end
     result
+  end
+
+  private
+
+  def handle_token(token:, result:, stream:)
+    @plugins.each do |plugin|
+      res = plugin.handle_token(token:  token,
+                                result: result,
+                                stream: stream,
+                                parser: self)
+      return res if res
+    end
+  end
+
+  def next_token(stream:, result:)
+    @plugins.each do |plugin|
+      res = plugin.next_token(result: result,
+                              stream: stream,
+                              parser: self)
+      return res if res
+    end
+
   end
 
 end
