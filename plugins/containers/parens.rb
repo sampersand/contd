@@ -20,7 +20,7 @@ module Containers
       true
     rescue stream.class::EOFError => e
       raise stream.class::EOFError,
-            "Reached end of stream whilst looking for end of comment '#{STOP}'"
+            "Reached end of stream whilst looking for end of paren container (`#{STOP}`)"
     end
 
   end
