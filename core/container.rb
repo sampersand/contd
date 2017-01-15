@@ -1,5 +1,6 @@
+require_relative 'keyword'
+
 class Container
-  require_relative 'keyword'
   # --- Constructor & Attrs --- #
     attr_reader :known, :stack, :config
     def initialize(stack: [], known: {})

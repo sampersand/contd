@@ -1,6 +1,7 @@
+require_relative 'container'
+require_relative 'char_stream'
+
 class Parser
-  require_relative 'container'
-  require_relative 'char_stream'
 
   module DefaultPlugin
     module_function
