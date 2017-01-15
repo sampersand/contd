@@ -33,9 +33,8 @@ x = 3;
 y = \'4.5\'
 y = "4.5"
 z = ten0_1 !
-ab
+w = ab
 '
-# input = '"123.456"'
 
 require_relative 'plugins/number'
 require_relative 'plugins/whitespace'
