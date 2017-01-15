@@ -6,9 +6,15 @@ module Number
 
     def next_token(stream:, **_)
       left = Int.next_token(stream: stream, **_)
-      # return unless 
+      p ['hai', left, stream]
       return unless left
-      p left
+      deci = stream.next
+      unless deci == '.'
+        stream.feed(*left, deci)
+        return
+      end
+      right = Int.next_token(stream: stream, **_)
+      raise "#{left}#{deci}#{right}".to_f
       raise
    end
 

@@ -32,11 +32,12 @@ input = '''
 x = 3;
 y = 4.5!
 '''
-input = '412.556'
+input = '123.456'
 
 require_relative 'plugins/number/decimal'
 parser = Parser.new
 parser.add Number::Decimal
+parser.add Number::Int
 res = parser.parse(input)
 p res
 

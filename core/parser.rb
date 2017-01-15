@@ -1,10 +1,11 @@
 class Parser
   require_relative 'container'
+  require_relative 'char_stream'
 
   module DefaultPlugin
     module_function
     def next_token(stream:, **_)
-      stream.shift
+      stream.next
     end
     def handle_token(token:, result:, **_)
       result << token
@@ -23,7 +24,7 @@ class Parser
 
   def parse(input)
     result = Container.new
-    stream = input.chars
+    stream = CharStream.new input
     until stream.empty?
       token = next_token(stream: stream,
                          result: result)

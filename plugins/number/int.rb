@@ -4,8 +4,7 @@ module Number
     module_function
 
     def next_token(stream:, **_)
-      res = ''
-      res += stream.shift until /[^\d]/ =~ stream.first
+      res = stream.next_until{ |char| /[^\d]/ !~ stream.peek }.join
       res.empty? ? nil : res
     end
 
