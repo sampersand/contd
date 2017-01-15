@@ -1,5 +1,5 @@
 class CharStream
-
+  EOFError = Class.new SyntaxError
   attr_accessor :chars
 
   def self.from_str(input)
@@ -15,7 +15,7 @@ class CharStream
   end
 
   def next
-    @chars.shift || fail 
+    @chars.shift || fail(EOFError, "Reached end of stream!")
   end
 
   def feed(*vals)
@@ -26,8 +26,8 @@ class CharStream
     @chars.empty?
   end
 
-  def peek
-    @chars.first
+  def peek(amnt=1)
+    @chars[0, amnt].join
   end
 
   def reset_to other_stream
@@ -40,7 +40,6 @@ class CharStream
   end
 
 end
-
 
 
 

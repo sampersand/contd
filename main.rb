@@ -29,7 +29,7 @@
 require_relative 'core/parser'
 
 input = '
-x = 3;
+/*x = 3;
 y = \'4.5\'
 z = ten0_1!
 '
