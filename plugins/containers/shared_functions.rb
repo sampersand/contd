@@ -1,4 +1,4 @@
-module SharedFunctions
+module ContainersSharedFunctions
   module_function
   def process_stream(container:, stream:, result:, parser:, **_)
       return unless stream.peek == container::START

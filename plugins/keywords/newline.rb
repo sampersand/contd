@@ -1,14 +1,15 @@
 require_relative 'shared_functions'
 
-smodule Keywords
+module Keywords
   module Newline
+
     VALUE = ';'
+    KEYWORD = Keyword::Newline
 
     module_function
 
-    def process_stream(stream:, result:, **_)
-      return unless stream.peek == VALUE
-      result << Keyword::Newline.new(stream.next)
+    def process_stream(**kwargs)
+      KeywordsSharedFunctions.process_stream(keyword: self, **kwargs)
     end
 
   end
