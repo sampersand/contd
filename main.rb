@@ -28,15 +28,20 @@
 
 require_relative 'core/parser'
 
-input = '''
+input = '
 x = 3;
-y = 4.5!
-'''
-input = '123.456'
+y = \'4.5!\'
+a
+'
+# input = '"123.456"'
 
 require_relative 'plugins/number'
+require_relative 'plugins/text'
+
 parser = Parser.new
-parser.add Number
+# parser.add Number
+parser.add Text
+
 res = parser.parse(input)
 p res
 

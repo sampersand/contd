@@ -23,7 +23,7 @@ class CharStream
   def next_until(&block)
     raise "No block given!" unless block_given?
     res = []
-    res << self.next while block.(peek) && !empty?
+    res << self.next while block.(peek, res, self) && !empty?
     res
   end
 end
