@@ -5,30 +5,33 @@ module Number
 
     module_function
 
-    def next_token(stream:, **_)
-      left = Int.next_token(stream: stream, **_)
-      return unless left
-      deci = stream.next
-      unless deci == '.'
-        stream.feed(*left, deci)
+    def process_stream(stream:, result:, **_ )
+      stream_copy = stream.clone
+
+      if Int.process_stream(stream: stream, result: result, **_)
+        left = result.pop # int pushes it into the input stream
+      else
+        stream.reset_to stream_copy
+        return 
+      end
+      
+      if stream.peek == '.'
+        deci = stream.next
+      else
+        stream.reset_to stream_copy
         return
       end
-      right = Int.next_token(stream: stream, **_)
-      "#{left}#{deci}#{right}"
-   end
 
-    def handle_token(token:, result:, **_)
-      return unless /^\d+\.\d+$/ =~ token
-      result << token.to_f
+      if Int.process_stream(stream: stream, result: result, **_)
+        right = result.pop # int pushes it into the input stream
+      else
+        stream.reset_to stream_copy
+        return 
+      end
 
-      # case token
-      # when /\d+\.\d+/
-      #   result << token.to_f
-      # when /\d+/
-      #   result << token.to_i
-      # end
+      result << "#{left}#{deci}#{right}".to_f
     end
-  end
 
+   end
 end
 

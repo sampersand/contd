@@ -15,16 +15,7 @@ module Text
       when 
       end
     end
-
   end
-
-  def handle_token(token:, result:, **_)
-    return unless STRING_REGEX =~ token
-    result << token.to_i
-  end
-end
-
-
 
 
 

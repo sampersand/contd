@@ -4,11 +4,8 @@ class Parser
 
   module DefaultPlugin
     module_function
-    def next_token(stream:, **_)
-      stream.next
-    end
-    def handle_token(token:, result:, **_)
-      result << token
+    def process_stream(stream:, result:, **_)
+      result << stream.next
     end
   end
 
@@ -28,34 +25,18 @@ class Parser
 
   def parse(input)
     result = Container.new
-    stream = CharStream.new input
+    stream = CharStream::from_str input
     until stream.empty?
-      token = next_token(stream: stream,
-                         result: result)
-      handle_token(token: token,
-                   result: result,
-                   stream: stream)
+      process_stream(stream: stream, result: result)
     end
     result
   end
 
   private
 
-  def handle_token(token:, result:, stream:)
+  def process_stream(stream:, result:)
     @plugins.each do |plugin|
-      res = plugin.handle_token(token:  token,
-                                result: result,
-                                stream: stream,
-                                parser: self)
-      return res if res
-    end
-  end
-
-  def next_token(stream:, result:)
-    @plugins.each do |plugin|
-      res = plugin.next_token(result: result,
-                              stream: stream,
-                              parser: self)
+      res = plugin.process_stream(result: result, stream: stream, parser: self)
       return res if res
     end
 
