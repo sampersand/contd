@@ -4,7 +4,7 @@ module Whitespace
 
   WHITESPACE_REGEX = /\s/
 
-  def process_stream(parser)
+  def process_next(parser)
     parser.next_while(&WHITESPACE_REGEX.method(:=~)).empty? ? nil : true
   end
 end

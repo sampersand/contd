@@ -4,7 +4,7 @@ class Parser
   module DefaultPlugin
     module_function
     def handle_next( parser )
-      result << parser.next
+      parser.result << parser.next
     end
   end
 
