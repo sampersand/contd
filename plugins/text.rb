@@ -5,9 +5,9 @@ module Text
 
   module_function
 
-  def handle_next(**kwargs)
-    SingleQuote.handle_next(**kwargs) ||
-    DoubleQuote.handle_next(**kwargs)
+  def handle_next(parser)
+    SingleQuote.handle_next(parser) ||
+    DoubleQuote.handle_next(parser)
   end
 
 end

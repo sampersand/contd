@@ -52,7 +52,7 @@ require_relative 'plugins/containers'
 
 # input = '3 + 42 * 5'
 parser = Parser.new(input)
-# parser.add Text
+parser.add Text
 parser.add Variable
 # parser.add Numbers
 parser.add Whitespace

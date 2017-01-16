@@ -1,28 +1,28 @@
 module Text
   module ExtendedMethods
 
-    def handle_next(stream:, result:, **_)
+    def handle_next(parser)
       fail "this only works for quotes and esapes of len 1" unless self::QUOTE.length == 1 &&
                                                                    self::ESCAPE.length == 1
-      return unless stream.peek == self::QUOTE
+      return unless parser.peek == self::QUOTE
 
-      start_quote = stream.next
+      start_quote = parser.next
       end_quote = start_quote
       body = ''
 
-      until (body += stream.next)[-1] == end_quote
+      until (body += parser.next)[-1] == end_quote
         
         if body[-1] == self::ESCAPE
-          case stream.peek
-          when self::NEWLINE then stream.next #and ignore
-          else body += stream.next
+          case parser.peek
+          when self::NEWLINE then parser.next #and ignore
+          else body += parser.next
           end
         end
       end
-      result << start_quote + body
+      parser.result << start_quote + body
       true
-    rescue stream.class::EOFError => e
-      raise stream.class::EOFError,
+    rescue parser.class::EOFError => e
+      raise parser.class::EOFError,
             "Reached end of stream whilst looking for end of text (`#{self::QUOTE.inspect}`)"
     end
   end
