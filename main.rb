@@ -56,7 +56,7 @@ parser = Parser.new(input)
 parser.add Variable
 # parser.add Numbers
 parser.add Whitespace
-# parser.add Keywords
+parser.add Keywords
 parser.add Comments
 # parser.add Operators
 # parser.add Containers

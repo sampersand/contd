@@ -6,10 +6,10 @@ module Keywords
 
   module_function
 
-  def handle_next(**kwargs)
-    Get.handle_next(**kwargs) ||
-    Call.handle_next(**kwargs) ||
-    Newline.handle_next(**kwargs)
+  def handle_next(parser)
+    Get.handle_next(parser) ||
+    Call.handle_next(parser) ||
+    Newline.handle_next(parser)
 
   end
 

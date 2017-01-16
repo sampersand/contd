@@ -1,8 +1,8 @@
 module Keywords
   module ExtendedMethods
-    def handle_next(stream:, result:, **_)
-      return unless stream.peek(self::VALUE.length) == self::VALUE
-      result << self::KEYWORD.new(stream.next(self::VALUE.length))
+    def handle_next(parser)
+      return unless parser.peek(self::VALUE.length) == self::VALUE
+      parser.result << self::KEYWORD.new(parser.next(self::VALUE.length))
     end
   end
 
