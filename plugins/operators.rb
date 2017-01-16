@@ -1,8 +1,8 @@
-require_relative 'operators/add'
-require_relative 'operators/sub'
+require_relative 'operators/math'
+require_relative 'operators/assign'
 
 module Operators
-  OPERATORS = [Add, Sub]
+  OPERATORS = [Math, Assign]
 
   module_function
   def added(parser)

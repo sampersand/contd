@@ -1,8 +1,10 @@
 class Operator
   attr_reader :name
+  attr_reader :identity
 
-  def initialize(name)
+  def initialize(name, identity=1)
     @name = name
+    @identity = identity
   end
 
   def to_s
@@ -10,13 +12,12 @@ class Operator
   end
 
   def inspect
-    "#{self.class}( `#{@name.inspect}` )"
+    "#{self.class}( `#{@name.inspect}`#{@identity == 1 ? '' : ", #{@identity}"} )"
   end
 
   def call(current)
     arg_container = current.pop.call(current.clone)
-    meth = arg_container.pop.method(@name)
-    current << meth.call(*meth.arity.times.collect{arg_container.pop})
+    current << arg_container.stack.reduce(@identity, &@name)
   end
 
 end
