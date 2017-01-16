@@ -9,10 +9,10 @@ class Container
     end
 
   # --- Stack Functions --- #
-    def pop; @stack.pop end
+    def pop(*a); @stack.pop(*a) end #*a should be [] or [amnt]
     def push(obj) @stack.push obj end
     def delete_at(pos) @stack.delete_at pos end
-    def shift; @stack.shift end
+    def shift(*a); @stack.shift(*a) end #*a should be [] or [amnt]
     def unshift(obj) @stack.unshift obj end
     alias :<< :push
 
@@ -57,8 +57,8 @@ class Container
 
   # --- Representation --- #
     def inspect
-      stack_s = @stack.empty? ? '' : "stack: #{@stack}"
-      known_s = @known.empty? ? '' : "known: #{@known}"
+      stack_s = @stack.empty? ? '' : "stack: #{filtered_stack}"
+      known_s = @known.empty? ? '' : "known: #{filtered_known}"
       sep = stack_s.empty? || known_s.empty? ? '' : ', '
       "#{self.class.name}(#{stack_s}#{sep}#{known_s})"
     end
@@ -66,10 +66,19 @@ class Container
     def to_s
       case
       when empty? then "<>"
-      when @stack.empty? then @known.to_s
-      when @known.empty? then @stack.to_s 
-      else "<#{@stack}, #{@known}>"
+      when @stack.empty? then filtered_known.to_s
+      when @known.empty? then filtered_stack.to_s 
+      else "<#{filtered_stack}, #{filtered_known}>"
       end
+    end
+
+    def filtered_stack
+      @stack
+      # @stack.select{ |e| !e.respond_to?(:keep_in_filter) || e.keep_in_filter }
+    end
+
+    def filtered_known
+      @known.select{ |_, v| !v.respond_to?(:keep_in_filter) || v.keep_in_filter }
     end
 
   # --- Execution --- #
@@ -86,7 +95,8 @@ class Container
           current.push result
         when Keyword::Call
           func = current.pop
-          func.call current
+          args = current.pop
+          func.call(args, current)
         else
           fail "Unknown keyword #{token}" if token.is_a?(Keyword)
           current.push token
@@ -95,8 +105,19 @@ class Container
       current
     end
 
-    def call(current)
-      clone.call!(current)
+    def call(args, current)
+      new_current = args.clone.call!(Container.new(known: current.known.clone))
+      # p new_current
+      current << clone.call!(new_current)
+      # args = current.pop.call(current.clone)
     end
 
 end
+
+
+
+
+
+
+
+

@@ -1,8 +1,9 @@
 class Operator
   attr_reader :name
 
-  def initialize(name)
+  def initialize(name, &func)
     @name = name
+    @func = func
   end
 
   def to_s
@@ -13,9 +14,14 @@ class Operator
     "#{self.class}( `#{@name.inspect}` )"
   end
 
-  def call(current)
-    arg_container = current.pop.call(current.clone)
-    current << arg_container.stack.reduce(&@name)
+  def call(args, current)
+    if @func
+      current << @func.call(args, current)
+    else
+      current << args.stack.reduce(&@name)
+    end
   end
+
+  def keep_in_filter; false end
 
 end

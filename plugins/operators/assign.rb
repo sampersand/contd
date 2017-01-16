@@ -4,8 +4,8 @@ require_relative 'operator'
 module Operators::Assign
   extend Operators
 
-  OPERATOR = Operator.new( :'=' ){ |l, r, current|
-    current[l] = r
+  OPERATOR = Operator.new( :'=' ){ |args, current|
+    current.[]=(*args.pop(2))
   }
 
 end
