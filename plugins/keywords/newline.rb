@@ -1,36 +1,11 @@
-require_relative 'shared_functions'
+require_relative 'keywords_extend'
 
 module Keywords
   module Newline
+    extend Keywords
 
     VALUE = ';'
     KEYWORD = Keyword::Newline
 
-    module_function
-
-    def process_stream(**kwargs)
-      KeywordsSharedFunctions.process_stream(keyword: self, **kwargs)
-    end
-
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

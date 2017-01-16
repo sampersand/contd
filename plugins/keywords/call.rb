@@ -1,36 +1,11 @@
-require_relative 'shared_functions'
+require_relative 'keywords_extend'
 
 module Keywords
   module Call
+    extend Keywords
 
     VALUE = '@'
     KEYWORD = Keyword::Call
 
-    module_function
-
-    def process_stream(**kwargs)
-      KeywordsSharedFunctions.process_stream(keyword: self, **kwargs)
-    end
-
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 module Number
   module Radix
-    module Methods
+    module ExtendedMethods
       def process_stream(stream:, result:, **_)
 
         return unless self::START_REGEX =~ stream.peek(self::START_REGEX.source.length)
@@ -15,7 +15,7 @@ module Number
     module_function
 
     def extended(other)
-      other.extend Methods
+      other.extend ExtendedMethods
     end
 
   end
