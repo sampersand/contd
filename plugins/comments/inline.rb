@@ -5,9 +5,9 @@ module Comments
 
     module_function
 
-    def process_stream(**kwargs)
-      CStyle.process_stream(**kwargs) ||
-      Pound.process_stream(**kwargs)
+    def handle_next(parser)
+      CStyle.handle_next(parser) ||
+      Pound.handle_next(parser)
     end
 
   end

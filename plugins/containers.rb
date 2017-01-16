@@ -6,10 +6,10 @@ module Containers
 
   module_function
 
-  def process_stream(**kwargs)
-    Brackets.process_stream(**kwargs) ||
-    Parens.process_stream(**kwargs) ||
-    Braces.process_stream(**kwargs)
+  def handle_next(**kwargs)
+    Brackets.handle_next(**kwargs) ||
+    Parens.handle_next(**kwargs) ||
+    Braces.handle_next(**kwargs)
 
   end
 

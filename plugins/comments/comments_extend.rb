@@ -1,16 +1,16 @@
 module Comments
   module ExtendedMethods
-    def process_stream(stream:, result:, **_)
-      return unless stream.peek(self::START.length) == self::START
+    def handle_next(parser)
+      return unless parser.peek(self::START.length) == self::START
 
-      stream.next(self::START.length) #to remove the START
-      stream.next until stream.peek(self::STOP.length) == self::STOP
-      stream.next(self::STOP.length) #to remove the STOP
+      parser.next(self::START.length) #to remove the START
+      parser.next until parser.peek(self::STOP.length) == self::STOP
+      parser.next(self::STOP.length) #to remove the STOP
 
       true
-    rescue stream.class::EOFError => e
-      raise stream.class::EOFError,
-            "Reached end of stream whilst looking for end of self (`#{self::STOP.inspect}`)"
+    rescue parser.class::EOFError => e
+      raise parser.class::EOFError,
+            "Reached end of stream whilst looking for end of comment (`#{self::STOP.inspect}`)"
     end
   end
 

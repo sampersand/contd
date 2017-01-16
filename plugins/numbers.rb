@@ -6,10 +6,10 @@ module Numbers
 
   module_function
 
-  def process_stream(**kwargs)
-    Radix.process_stream(**kwargs) || 
-    Real.process_stream(**kwargs) ||
-    Whole.process_stream(**kwargs)  
+  def handle_next(**kwargs)
+    Radix.handle_next(**kwargs) || 
+    Real.handle_next(**kwargs) ||
+    Whole.handle_next(**kwargs)  
   end
 
 end

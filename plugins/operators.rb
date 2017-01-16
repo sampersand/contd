@@ -8,8 +8,8 @@ module Operators
     Add.added(parser: parser)
   end
 
-  def process_stream(**kwargs)
-    Add.process_stream(**kwargs)
+  def handle_next(**kwargs)
+    Add.handle_next(**kwargs)
 
   end
 

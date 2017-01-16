@@ -1,7 +1,7 @@
 module Numbers
   module Radix
     module ExtendedMethods
-      def process_stream(stream:, result:, **_)
+      def handle_next(stream:, result:, **_)
 
         return unless self::START_REGEX =~ stream.peek(self::START_REGEX.source.length)
         stream.next(self::START_REGEX.source.length) # pop the start of the regex

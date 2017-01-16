@@ -5,9 +5,9 @@ module Comments
 
   module_function
 
-  def process_stream(**kwargs)
-    Comments::Inline.process_stream(**kwargs) ||
-    Comments::Block.process_stream(**kwargs)
+  def handle_next(parser)
+    Comments::Inline.handle_next(parser) ||
+    Comments::Block.handle_next(parser)
   end
 
 end

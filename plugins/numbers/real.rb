@@ -5,10 +5,10 @@ module Numbers
 
     module_function
 
-    def process_stream(stream:, result:, **_ )
+    def handle_next(stream:, result:, **_ )
       stream_copy = stream.clone
 
-      if Whole.process_stream(stream: stream, result: result, **_)
+      if Whole.handle_next(stream: stream, result: result, **_)
         left = result.pop # int pushes it into the input stream
       else
         stream.reset_to stream_copy
@@ -22,7 +22,7 @@ module Numbers
         return
       end
 
-      if Whole.process_stream(stream: stream, result: result, **_)
+      if Whole.handle_next(stream: stream, result: result, **_)
         right = result.pop # int pushes it into the input stream
       else
         stream.reset_to stream_copy

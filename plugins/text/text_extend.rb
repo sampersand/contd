@@ -1,7 +1,7 @@
 module Text
   module ExtendedMethods
 
-    def process_stream(stream:, result:, **_)
+    def handle_next(stream:, result:, **_)
       fail "this only works for quotes and esapes of len 1" unless self::QUOTE.length == 1 &&
                                                                    self::ESCAPE.length == 1
       return unless stream.peek == self::QUOTE

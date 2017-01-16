@@ -6,10 +6,10 @@ module Keywords
 
   module_function
 
-  def process_stream(**kwargs)
-    Get.process_stream(**kwargs) ||
-    Call.process_stream(**kwargs) ||
-    Newline.process_stream(**kwargs)
+  def handle_next(**kwargs)
+    Get.handle_next(**kwargs) ||
+    Call.handle_next(**kwargs) ||
+    Newline.handle_next(**kwargs)
 
   end
 

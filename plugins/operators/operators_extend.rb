@@ -6,7 +6,7 @@ module Operators
 
 
 
-    def process_stream(stream:, result:, parser:, **_)
+    def handle_next(stream:, result:, parser:, **_)
       return unless stream.peek == self::OPERATOR.name
     end
 

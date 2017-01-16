@@ -5,9 +5,9 @@ module Text
 
   module_function
 
-  def process_stream(**kwargs)
-    SingleQuote.process_stream(**kwargs) ||
-    DoubleQuote.process_stream(**kwargs)
+  def handle_next(**kwargs)
+    SingleQuote.handle_next(**kwargs) ||
+    DoubleQuote.handle_next(**kwargs)
   end
 
 end

@@ -7,11 +7,11 @@ module Numbers
 
     module_function
 
-    def process_stream(**kwargs)
-      Binary.process_stream(**kwargs) ||
-      Hexadecimal.process_stream(**kwargs) ||
-      Octal.process_stream(**kwargs) ||
-      Denary.process_stream(**kwargs)
+    def handle_next(**kwargs)
+      Binary.handle_next(**kwargs) ||
+      Hexadecimal.handle_next(**kwargs) ||
+      Octal.handle_next(**kwargs) ||
+      Denary.handle_next(**kwargs)
     end
 
   end

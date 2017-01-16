@@ -1,7 +1,7 @@
 module Containers
 
   module ExtendedMethods
-    def process_stream(stream:, result:, parser:, **_)
+    def handle_next(stream:, result:, parser:, **_)
         return unless stream.peek == self::START
 
         stream.next # pop START
