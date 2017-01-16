@@ -15,11 +15,14 @@ module TextSharedFunctions
         quote += stream.next
       when start_quote
         break
+      when nil
+        raise EOFError.new
       end
     end
     result << quote
     true
   rescue stream.class::EOFError => e
+    puts 'a'
     raise stream.class::EOFError,
           "Reached end of stream whilst looking for end of text (`#{plugin::QUOTE}`)"
   end
