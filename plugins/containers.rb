@@ -1,36 +1,12 @@
-require_relative 'containers/brackets'
+require_relative 'plugin_module'
+
 require_relative 'containers/parens'
 require_relative 'containers/braces'
+require_relative 'containers/brackets'
 
 module Containers
+  extend PluginModule
 
-  module_function
-
-  def handle_next(parser)
-    Brackets.handle_next(parser) ||
-    Parens.handle_next(parser) ||
-    Braces.handle_next(parser)
-
-  end
+  PLUGINS = [Brackets, Parens, Braces]
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,3 +1,5 @@
+require_relative '../plugin_module'
+
 require_relative 'math/add'
 require_relative 'math/sub'
 require_relative 'math/mul'
@@ -7,15 +9,9 @@ require_relative 'math/pow'
 
 module Operators
   module Math
-    OPERATORS = [Add, Sub, Mul, Div, Mod, Pow]
+    extend PluginModule
 
-    module_function
-    def added(parser)
-      OPERATORS.each{ |o| o.added(parser) }
-    end
+    PLUGINS = [Add, Sub, Mul, Div, Mod, Pow]
 
-    def handle_next(parser)
-      OPERATORS.any?{ |o| o.handle_next(parser) }
-    end
   end
 end

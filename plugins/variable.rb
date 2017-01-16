@@ -1,9 +1,9 @@
 module Variable
 
-  module_function
-
   VARIABLE_START_REGEX = /[a-zA-Z_]/
   VARIABLE_BODY_REGEX  = /[a-zA-Z0-9_]/
+
+  module_function
 
   def handle_next(parser)
     return unless VARIABLE_START_REGEX =~ parser.peek

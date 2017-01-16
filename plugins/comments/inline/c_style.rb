@@ -1,8 +1,8 @@
 require_relative 'inline_extend'
 
-module Comments
-  module Inline::CStyle
-    extend Inline
-    START = '//'
-  end
+module Comments::Inline::CStyle
+  extend Comments::Inline
+
+  START = '//'
+
 end

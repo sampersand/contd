@@ -1,10 +1,8 @@
 class Operator
   attr_reader :name
-  attr_reader :identity
 
-  def initialize(name, identity=1)
+  def initialize(name)
     @name = name
-    @identity = identity
   end
 
   def to_s
@@ -12,12 +10,12 @@ class Operator
   end
 
   def inspect
-    "#{self.class}( `#{@name.inspect}`#{@identity == 1 ? '' : ", #{@identity}"} )"
+    "#{self.class}( `#{@name.inspect}` )"
   end
 
   def call(current)
     arg_container = current.pop.call(current.clone)
-    current << arg_container.stack.reduce(@identity, &@name)
+    current << arg_container.stack.reduce(&@name)
   end
 
 end

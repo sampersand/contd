@@ -1,17 +1,13 @@
+require_relative 'plugin_module'
+
 require_relative 'keywords/get'
 require_relative 'keywords/call'
 require_relative 'keywords/newline'
 
 module Keywords
+  extend PluginModule
 
-  module_function
-
-  def handle_next(parser)
-    Get.handle_next(parser) ||
-    Call.handle_next(parser) ||
-    Newline.handle_next(parser)
-
-  end
+  PLUGINS = [Get, Call, Newline]
 
 end
 

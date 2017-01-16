@@ -4,6 +4,6 @@ require_relative '../operator'
 module Operators::Sub
   extend Operators
 
-  OPERATOR = Operator.new :-, 0 
+  OPERATOR = Operator.new :-
 
 end

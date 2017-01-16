@@ -1,13 +1,11 @@
+require_relative 'plugin_module'
+
 require_relative 'numbers/whole'
 require_relative 'numbers/radix'
 
 module Numbers
+  extend PluginModule
 
-  module_function
-
-  def handle_next(parser)
-    Radix.handle_next(parser) || 
-    Whole.handle_next(parser)  
-  end
+  PLUGINS = [Radix, Whole]
 
 end

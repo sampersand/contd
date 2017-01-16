@@ -1,14 +1,11 @@
+require_relative '../plugin_module'
+
 require_relative 'inline/c_style'
 require_relative 'inline/pound'
-module Comments
-  module Inline
 
-    module_function
+module Comments::Inline
+  extend PluginModule
 
-    def handle_next(parser)
-      CStyle.handle_next(parser) ||
-      Pound.handle_next(parser)
-    end
+  PLUGINS = [CStyle, Pound]
 
-  end
 end

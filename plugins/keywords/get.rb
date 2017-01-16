@@ -1,11 +1,8 @@
+require_relative '../../core/keyword'
 require_relative 'keywords_extend'
 
-module Keywords
-  module Get
-    extend Keywords
-
-    VALUE = '!'
-    KEYWORD = Keyword::Get
-
-  end
+module Keywords::Get
+  extend Keywords
+  VALUE = '!'
+  KEYWORD = Keyword::Get
 end

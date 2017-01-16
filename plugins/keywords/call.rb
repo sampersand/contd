@@ -1,11 +1,8 @@
+require_relative '../../core/keyword'
 require_relative 'keywords_extend'
 
-module Keywords
-  module Call
-    extend Keywords
-
-    VALUE = '@'
-    KEYWORD = Keyword::Call
-
-  end
+module Keywords::Call
+  extend Keywords
+  VALUE = '@'
+  KEYWORD = Keyword::Call
 end
