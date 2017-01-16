@@ -31,6 +31,7 @@ input = '
 (foo {x!})=!@;
 ((x, 3)=!@)foo!@
 '
+
 parser = Parser.new(input)
 parser.add Text
 parser.add Variable
