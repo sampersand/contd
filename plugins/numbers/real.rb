@@ -1,6 +1,6 @@
 require_relative 'whole'
 
-module Number
+module Numbers
   module Real
 
     module_function

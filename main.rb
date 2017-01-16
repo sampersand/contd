@@ -41,26 +41,24 @@ w = ten0_1 !
 v = 
 ab'
 
-
-
-require_relative 'plugins/number'
+require_relative 'plugins/numbers'
 require_relative 'plugins/whitespace'
 require_relative 'plugins/text'
 require_relative 'plugins/keywords'
 require_relative 'plugins/variable'
-require_relative 'plugins/comment'
+require_relative 'plugins/comments'
 # require_relative 'plugins/operator'
 require_relative 'plugins/containers'
 
 parser = Parser.new
 parser.add Text
 parser.add Variable
-parser.add Number
+parser.add Numbers
 parser.add Whitespace
 parser.add Keywords
-parser.add Comment
+parser.add Comments
 # parser.add Operator
-# parser.add Containers
+parser.add Containers
 
 res = parser.parse(input)
 p res.stack

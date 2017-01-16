@@ -1,8 +1,8 @@
-require_relative 'number/whole'
-require_relative 'number/radix'
-require_relative 'number/real'
+require_relative 'numbers/whole'
+require_relative 'numbers/radix'
+require_relative 'numbers/real'
 
-module Number
+module Numbers
 
   module_function
 

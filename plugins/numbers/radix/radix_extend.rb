@@ -1,4 +1,4 @@
-module Number
+module Numbers
   module Radix
     module ExtendedMethods
       def process_stream(stream:, result:, **_)

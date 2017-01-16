@@ -1,4 +1,4 @@
-module Number
+module Numbers
   module Whole
     module_function
 

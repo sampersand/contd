@@ -1,12 +1,10 @@
 require_relative 'text_extend'
 
-module Text
-  module DoubleQuote
-    extend Text
+module Text::DoubleQuote
+  extend Text
 
-    QUOTE = "\""
-    ESCAPE = "\\"
-    NEWLINE = "\n"
+  QUOTE = "\""
+  ESCAPE = "\\"
+  NEWLINE = "\n"
 
-  end
 end

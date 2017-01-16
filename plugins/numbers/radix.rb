@@ -2,7 +2,7 @@ require_relative 'radix/binary'
 require_relative 'radix/octal'
 require_relative 'radix/denary'
 require_relative 'radix/hexadecimal'
-module Number
+module Numbers
   module Radix
 
     module_function

@@ -23,7 +23,7 @@ module Text
       true
     rescue stream.class::EOFError => e
       raise stream.class::EOFError,
-            "Reached end of stream whilst looking for end of text (`#{self::QUOTE}`)"
+            "Reached end of stream whilst looking for end of text (`#{self::QUOTE.inspect}`)"
     end
   end
 
