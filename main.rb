@@ -40,11 +40,6 @@ z = (6.7 + 9) * 3.2
 w = ten0_1 !
 v = 
 ab'
-input = '
-"abc\'a"\"
-b
-"
-'
 require_relative 'plugins/number'
 require_relative 'plugins/whitespace'
 require_relative 'plugins/text'
@@ -57,8 +52,8 @@ require_relative 'plugins/containers'
 parser = Parser.new
 parser.add Text
 parser.add Variable
-# parser.add Number
-# parser.add Whitespace
+parser.add Number
+parser.add Whitespace
 # parser.add Keywords
 # parser.add Comment
 # parser.add Operator

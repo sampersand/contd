@@ -1,4 +1,4 @@
-require_relative 'number/int'
+require_relative 'number/whole'
 require_relative 'number/decimal'
 
 module Number
@@ -7,7 +7,7 @@ module Number
 
   def process_stream(**kwargs)
     Decimal.process_stream(**kwargs) ||
-    Int.process_stream(**kwargs)
+    Whole.process_stream(**kwargs)
   end
 
 end

@@ -1,4 +1,4 @@
-require_relative 'int'
+require_relative 'whole'
 
 module Number
   module Decimal
@@ -8,7 +8,7 @@ module Number
     def process_stream(stream:, result:, **_ )
       stream_copy = stream.clone
 
-      if Int.process_stream(stream: stream, result: result, **_)
+      if Whole.process_stream(stream: stream, result: result, **_)
         left = result.pop # int pushes it into the input stream
       else
         stream.reset_to stream_copy
@@ -22,7 +22,7 @@ module Number
         return
       end
 
-      if Int.process_stream(stream: stream, result: result, **_)
+      if Whole.process_stream(stream: stream, result: result, **_)
         right = result.pop # int pushes it into the input stream
       else
         stream.reset_to stream_copy
