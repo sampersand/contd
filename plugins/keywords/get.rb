@@ -1,5 +1,5 @@
 require_relative '../../core/keyword'
-require_relative 'keywords_extend'
+require_relative 'deleteme'
 
 module Keywords::Get
   extend Keywords
