@@ -7,19 +7,19 @@ module TextSharedFunctions
                                                                  plugin::ESCAPE.length == 1
     return unless stream.peek == plugin::QUOTE
     start_quote = stream.next
-    quote = start_quote
+    body = ''
     loop do
-      quote += stream.next
-      case quote[-1]
+      body += stream.next
+      case body[-1]
       when plugin::ESCAPE
-        quote += stream.next
+        body += stream.next
       when start_quote
         break
       when nil
         raise EOFError.new
       end
     end
-    result << quote
+    result << body
     true
   rescue stream.class::EOFError => e
     puts 'a'
