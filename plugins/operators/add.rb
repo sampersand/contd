@@ -1,4 +1,4 @@
-module Operator
+module Operators
   module Add
     VALUE = '+'
 

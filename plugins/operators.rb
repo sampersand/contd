@@ -1,6 +1,6 @@
-require_relative 'operator/add'
+require_relative 'operators/add'
 
-module Operator
+module Operators
 
   module_function
 
