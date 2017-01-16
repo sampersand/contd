@@ -5,9 +5,7 @@ module Whitespace
   WHITESPACE_REGEX = /\s/
 
   def process_stream(stream:, **_)
-    return unless WHITESPACE_REGEX =~ stream.peek
-    stream.next while WHITESPACE_REGEX =~ stream.peek
-    true
+    stream.next_while(&WHITESPACE_REGEX.method(:=~)).empty? ? nil : true
   end
 end
 

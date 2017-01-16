@@ -29,6 +29,8 @@
 require_relative 'core/parser'
 
 input = '
+
+
 x = 3;
 y = \'4.5\'
 #foo
@@ -59,7 +61,7 @@ parser.add Comment
 parser.add Containers
 
 res = parser.parse(input)
-puts res.stack
+p res.stack
 
 
 

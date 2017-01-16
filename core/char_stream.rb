@@ -39,7 +39,35 @@ class CharStream
     @chars.clone
   end
 
+  def next_while(&block)
+    res = []
+    res << self.next while block.call(self.peek)
+    res.join
+  end
+
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
