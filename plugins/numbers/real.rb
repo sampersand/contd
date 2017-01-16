@@ -5,8 +5,13 @@ module Numbers
 
     module_function
 
+
+    REAL_START = /\d/
+    REAL_BODY = /\d*\.\d+/
+
     def handle_next(parser)
-      return nil
+      return unless REAL_REGEX =~ parser.peek
+      exit
       stream_copy = stream.clone
 
       if Whole.handle_next(stream: stream, result: result, **_)
