@@ -14,8 +14,9 @@ class Operator
   end
 
   def call(current)
-    puts current, self
-    exit
+    args = current.pop
+    right, left = args.pop, args.pop
+    current << left.method(@name).(right)
   end
 
 end

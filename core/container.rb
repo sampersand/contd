@@ -86,7 +86,7 @@ class Container
           current.push result
         when Keyword::Call
           func = current.pop
-          func.call(current: current)
+          func.call current
         else
           fail "Unknown keyword #{token}" if token.is_a?(Keyword)
           current.push token
