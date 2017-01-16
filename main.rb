@@ -41,8 +41,9 @@ w = ten0_1 !
 v = 
 ab'
 input = '
-"abc\'a"\""
+"abc\'a"\"
 b
+"
 '
 require_relative 'plugins/number'
 require_relative 'plugins/whitespace'

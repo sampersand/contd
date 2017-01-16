@@ -15,7 +15,8 @@ class CharStream
   end
 
   def next(amnt=1)
-    @chars.shift(amnt).join || fail(EOFError, "Reached end of stream!")
+    @chars.empty? and fail(EOFError, "Reached end of stream!")
+    @chars.shift(amnt).join
   end
 
   def feed(*vals)
