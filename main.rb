@@ -39,7 +39,9 @@ baz */
 z = (6.7 + 9) * 3.2
 w = ten0_1 !
 v = 
-ab
+ab'
+input = 'abc
+b
 '
 require_relative 'plugins/number'
 require_relative 'plugins/whitespace'
@@ -51,14 +53,14 @@ require_relative 'plugins/comment'
 require_relative 'plugins/containers'
 
 parser = Parser.new
-parser.add Text
+# parser.add Text
 parser.add Variable
-parser.add Number
-parser.add Whitespace
-parser.add Keywords
-parser.add Comment
+# parser.add Number
+# parser.add Whitespace
+# parser.add Keywords
+# parser.add Comment
 # parser.add Operator
-parser.add Containers
+# parser.add Containers
 
 res = parser.parse(input)
 p res.stack

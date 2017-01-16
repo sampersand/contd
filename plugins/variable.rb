@@ -2,12 +2,13 @@ module Variable
 
   module_function
 
-  VARIABLE_REGEX = /\A[a-zA-Z0-9_]+\z/ #this leads to problems with `0ten_10`
+  VARIABLE_START_REGEX = /[a-zA-Z_]/
+  VARIABLE_BODY_REGEX  = /[a-zA-Z0-9_]/
 
   def process_stream(stream:, result:,  **_)
-    ret = ''
-    ret += stream.next while VARIABLE_REGEX =~ ret + stream.peek && !stream.empty?
-    ret.empty? ? nil : result << ret
+    return unless VARIABLE_START_REGEX =~ stream.peek
+    res = stream.next + stream.next_while(&VARIABLE_BODY_REGEX.method(:=~))
+    res.empty? ? nil : result << res
   end
 end
 
