@@ -6,10 +6,10 @@ module Containers
 
   module_function
 
-  def handle_next(**kwargs)
-    Brackets.handle_next(**kwargs) ||
-    Parens.handle_next(**kwargs) ||
-    Braces.handle_next(**kwargs)
+  def handle_next(parser)
+    Brackets.handle_next(parser) ||
+    Parens.handle_next(parser) ||
+    Braces.handle_next(parser)
 
   end
 

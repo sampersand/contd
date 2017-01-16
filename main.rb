@@ -59,7 +59,7 @@ parser.add Whitespace
 parser.add Keywords
 parser.add Comments
 # parser.add Operators
-# parser.add Containers
+parser.add Containers
 
 res = parser.run
 p res.stack

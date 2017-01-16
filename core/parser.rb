@@ -1,6 +1,7 @@
 require_relative 'container'
 
 class Parser
+  EOFError = Class.new( SyntaxError )
   module DefaultPlugin
     module_function
     def handle_next( parser )
@@ -11,10 +12,10 @@ class Parser
   attr_reader :plugins
   attr_reader :result
 
-  def initialize(input)
+  def initialize(input, plugins: nil, result: nil)
     @chars = input.chars
-    @plugins = [DefaultPlugin]
-    @result = Container.new
+    @plugins = plugins || [DefaultPlugin]
+    @result = result || Container.new
   end
 
   # --- Parsing --- #
@@ -33,6 +34,10 @@ class Parser
       res = plugin.handle_next( self )
       return res if res
     end
+  end
+
+  def fork(input)
+    self.class.new(input, plugins: @plugins.clone)
   end
 
   # --- Stream --- #
