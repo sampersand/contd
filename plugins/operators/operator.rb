@@ -1,8 +1,9 @@
 class Operator
-  attr_reader :name
+  attr_reader :name, :priority
 
-  def initialize(name, &func)
+  def initialize(name, priority, &func)
     @name = name
+    @priority = priority
     @func = func
   end
 
@@ -15,10 +16,11 @@ class Operator
   end
 
   def call(args, current)
+    args = args.call(Container.new, current.clone)
     if @func
       current << @func.call(args, current)
     else
-      current << args.stack.reduce(&@name)
+      current << args.stack.reduce(&@name.to_sym)
     end
   end
 

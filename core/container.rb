@@ -26,6 +26,7 @@ class Container
 
   # --- Hash Functions --- #
     def [](key); @known[key] end
+
     def []=(key, value); @known[key] = value end
 
     def to_h
@@ -107,9 +108,12 @@ class Container
 
     def call(args, current)
       new_current = args.clone.call!(Container.new(known: current.known.clone))
-      # p new_current
-      current << clone.call!(new_current)
-      # args = current.pop.call(current.clone)
+      clone.call!(new_current)
+    end
+
+    def debug_call(args, current)
+      new_current = args.clone.call!(Container.new(known: current.known.clone))
+      clone.call!(new_current)
     end
 
 end

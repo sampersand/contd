@@ -29,8 +29,10 @@ input = '(3 (4)-!@)+!@'
 input = '(9 (4 5)-!@)+!@'
 input = '
 (foo {x!})=!@;
-((x, 3)=!@)foo!@
+((x 3)=!@)foo!@
 '
+
+input = '1 + 22 * 3 ^ 4'
 
 parser = Parser.new(input)
 parser.add Text
@@ -45,8 +47,12 @@ parser.add Containers
 res = parser.run
 
 body, result = res.split
+# p body.stack[0].stack[0]
+# p body.stack[0].stack[1].stack[1]
+# p body.stack[1]
+# p body.stack[2]
 
-puts body.call(Container.new, result)
+puts body.debug_call(Container.new, result)
 
 
 

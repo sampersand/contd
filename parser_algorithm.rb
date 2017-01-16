@@ -23,10 +23,10 @@ end
   class Object
   def imp
     case self
-    when :** then 3
+    when :** then 1
     when :* then 2
-    when :+ then 1
-    else 4
+    when :+ then 3
+    else 0
     end
   end
 end
