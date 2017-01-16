@@ -14,7 +14,7 @@ class Operator
   end
 
   def call(current)
-    arg_container = current.pop
+    arg_container = current.pop.call(current.clone)
     meth = arg_container.pop.method(@name)
     current << meth.call(*meth.arity.times.collect{arg_container.pop})
   end
