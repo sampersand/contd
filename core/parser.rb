@@ -5,17 +5,17 @@ class Parser
 
   module DefaultPlugin
     module_function
-    def process_stream(stream:, result:, **_)
-      result << stream.next
+    def process_parser(parser)
+      result << parser.stream.next
     end
   end
 
-  attr_reader :input
+  attr_reader :stream
   attr_reader :plugins
   attr_reader :result
 
   def initialize(input)
-    @input = input
+    @stream = CharStream::from_str input
     @plugins = [DefaultPlugin]
     @result = Container.new
   end
@@ -26,16 +26,13 @@ class Parser
   end
 
   def run
-    stream = CharStream::from_str input
-    until stream.empty?
-      process_stream(stream: stream, result: @result)
-    end
+    process_parser until @stream.empty?
     @result
   end
 
-  def process_stream(stream:, result:)
+  def process_parser
     @plugins.each do |plugin|
-      res = plugin.process_stream(result: result, stream: stream, parser: self)
+      res = plugin.process_parser( self)
       return res if res
     end
   end
