@@ -51,7 +51,8 @@ require_relative 'plugins/operators'
 require_relative 'plugins/containers'
 
 input = '3 + 42 * 5'
-input = '(3 4)+!@'
+input = '(3 (4)-!@)+!@'
+input = '(())'
 parser = Parser.new(input)
 parser.add Text
 parser.add Variable
@@ -63,6 +64,7 @@ parser.add Operators
 parser.add Containers
 
 res = parser.run
+
 body, args = res.split
 puts body.call(args)
 
