@@ -1,8 +1,8 @@
 require_relative 'operators/add'
-require_relative 'operators/neg'
+require_relative 'operators/sub'
 
 module Operators
-  OPERATORS = [Add, Neg]
+  OPERATORS = [Add, Sub]
 
   module_function
   def added(parser)

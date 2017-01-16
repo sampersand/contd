@@ -7,8 +7,8 @@ module Operators
 
 
     def handle_next(parser)
-      return unless parser.peek == self::OPERATOR.name.to_s
-      parser.result << parser.next.to_sym # temporary
+      return unless parser.peek(self::OPERATOR.name.length) == self::OPERATOR.name.to_s
+      parser.result << parser.next(self::OPERATOR.name.length).to_sym # temporary
 
     end
 
