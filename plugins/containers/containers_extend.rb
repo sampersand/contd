@@ -7,12 +7,20 @@ module Containers
         parser.next # pop START
 
         body = ''
-        body += parser.next until parser.peek == self::STOP
+        paren_amnt = 1
+        loop do
+          paren_amnt += case parser.peek
+                        when self::STOP then -1
+                        when self::START then 1
+                        else 0
+                        end
+          break if paren_amnt == 0
+          body += parser.next
+        end
 
         parser.next # pop STOP
 
         parser.result << parser.fork(body).run
-
         true
       rescue parser.class::EOFError => e
         raise parser.class::EOFError,
