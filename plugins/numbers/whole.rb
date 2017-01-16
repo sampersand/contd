@@ -4,10 +4,9 @@ module Numbers
 
     WHOLE_REGEX = /\d/
 
-    def handle_next(stream:, result:, **_)
-      res = stream.next_while(&self::WHOLE_REGEX.method(:=~))
-      return if res.empty?
-      result << res.to_i
+    def handle_next(parser)
+      (res = parser.next_while(&self::WHOLE_REGEX.method(:=~))).empty? and return
+      parser.result << res.to_i
       true
     end
 

@@ -7,11 +7,11 @@ module Numbers
 
     module_function
 
-    def handle_next(**kwargs)
-      Binary.handle_next(**kwargs) ||
-      Hexadecimal.handle_next(**kwargs) ||
-      Octal.handle_next(**kwargs) ||
-      Denary.handle_next(**kwargs)
+    def handle_next(parser)
+      Binary.handle_next(parser) ||
+      Hexadecimal.handle_next(parser) ||
+      Octal.handle_next(parser) ||
+      Denary.handle_next(parser)
     end
 
   end

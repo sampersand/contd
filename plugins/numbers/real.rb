@@ -5,7 +5,8 @@ module Numbers
 
     module_function
 
-    def handle_next(stream:, result:, **_ )
+    def handle_next(parser)
+      return nil
       stream_copy = stream.clone
 
       if Whole.handle_next(stream: stream, result: result, **_)

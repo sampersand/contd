@@ -54,7 +54,7 @@ require_relative 'plugins/containers'
 parser = Parser.new(input)
 parser.add Text
 parser.add Variable
-# parser.add Numbers
+parser.add Numbers
 parser.add Whitespace
 parser.add Keywords
 parser.add Comments
