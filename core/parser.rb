@@ -20,7 +20,7 @@ class Parser
 
   def add(plugin)
     @plugins.unshift plugin
-    plugin.on_added(self) if plugin.respond_to?(:on_added)
+    plugin.added(parser: self) if plugin.respond_to?(:added)
   end
 
   def parse(input)

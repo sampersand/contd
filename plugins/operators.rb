@@ -4,8 +4,8 @@ module Operators
 
   module_function
 
-  def on_added(parser)
-    Add.on_added(parser)
+  def added(parser:)
+    Add.added(parser: parser)
   end
 
   def process_stream(**kwargs)
