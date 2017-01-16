@@ -1,13 +1,13 @@
 module Operators
   module ExtendedMethods
-    def added(parser:)
+    def added(parser)
       parser.result[self::OPERATOR.name] = self::OPERATOR
     end
 
 
 
-    def handle_next(stream:, result:, parser:, **_)
-      return unless stream.peek == self::OPERATOR.name
+    def handle_next(parser)
+      return unless parser.peek == self::OPERATOR.name
     end
 
 

@@ -21,7 +21,7 @@ class Parser
   # --- Parsing --- #
   def add(plugin)
     @plugins.unshift plugin
-    plugin.added(parser: self) if plugin.respond_to?(:added)
+    plugin.added(self) if plugin.respond_to?(:added)
   end
 
   def run

@@ -4,12 +4,12 @@ module Operators
 
   module_function
 
-  def added(parser:)
-    Add.added(parser: parser)
+  def added(parser)
+    Add.added(parser)
   end
 
-  def handle_next(**kwargs)
-    Add.handle_next(**kwargs)
+  def handle_next(parser)
+    Add.handle_next(parser)
 
   end
 
