@@ -1,14 +1,26 @@
 module Operators
   module ExtendedMethods
-    def process_stream(stream:, result:, **_)
-
-      return unless self::START_REGEX =~ stream.peek(self::START_REGEX.source.length)
-      stream.next(self::START_REGEX.source.length) # pop the start of the regex
-      res = stream.next_while(&self::BODY_REGEX.method(:=~))
-      result << res.to_i(self::BASE)
-      true
-
+    def added(parser:)
+      p 'a'
+      exit
     end
+
+
+
+    def process_stream(stream:, result:, parser:, **_)
+      return unless stream.peek == VALUE
+      args = Container.new
+      args << result.pop
+      name = stream.next
+      i = 0
+      p parser.process_stream(stream: stream, result: args) # WARNING: WILL FAIL WITH `a!`
+      p stream
+      p args
+      exit
+      result << stream.nextKeyword::Call.new(stream.next)
+    end
+
+
   end
 
   module_function
@@ -17,5 +29,4 @@ module Operators
     other.extend ExtendedMethods
   end
 
-  end
 end

@@ -1,8 +1,7 @@
 class Operator
-  def initialize(name, &func)
-    raise "Function needed for operator `#{name.inspect}`" unless block_given?
+  def initialize(name)
     @name = name
-    @func = func
+    # func is derived from name
   end
 
   def to_s
