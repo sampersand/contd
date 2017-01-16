@@ -40,6 +40,14 @@ z = (6.7 + 9) * 3.2
 w = ten0_1 !
 v = 
 ab'
+input = '
+x = 0x0110
+y = 0d39a
+z = 20
+w = 2.3
+'
+
+
 require_relative 'plugins/number'
 require_relative 'plugins/whitespace'
 require_relative 'plugins/text'
@@ -55,13 +63,12 @@ parser.add Variable
 parser.add Number
 parser.add Whitespace
 # parser.add Keywords
-# parser.add Comment
+parser.add Comment
 # parser.add Operator
 # parser.add Containers
 
 res = parser.parse(input)
 p res.stack
-
 
 
 

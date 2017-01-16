@@ -1,7 +1,7 @@
 require_relative 'whole'
 
 module Number
-  module Decimal
+  module Real
 
     module_function
 

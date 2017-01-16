@@ -8,7 +8,7 @@ module Variable
   def process_stream(stream:, result:,  **_)
     return unless VARIABLE_START_REGEX =~ stream.peek
     res = stream.next + stream.next_while(&VARIABLE_BODY_REGEX.method(:=~))
-    res.empty? ? nil : result << res
+    res.empty? ? nil : result << res.to_sym
   end
 end
 
