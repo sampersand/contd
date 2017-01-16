@@ -10,12 +10,14 @@ class Parser
     end
   end
 
+  attr_reader :input
   attr_reader :plugins
-  attr_reader :master_known
+  attr_reader :result
 
-  def initialize(*plugins)
-    @plugins = plugins + [DefaultPlugin]
-    @master_known = Container.new
+  def initialize(input)
+    @input = input
+    @plugins = [DefaultPlugin]
+    @result = Container.new
   end
 
   def add(plugin)
@@ -23,13 +25,12 @@ class Parser
     plugin.added(parser: self) if plugin.respond_to?(:added)
   end
 
-  def parse(input)
-    result = Container.new
+  def run
     stream = CharStream::from_str input
     until stream.empty?
-      process_stream(stream: stream, result: result)
+      process_stream(stream: stream, result: @result)
     end
-    result
+    @result
   end
 
   def process_stream(stream:, result:)

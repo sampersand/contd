@@ -1,7 +1,8 @@
 class Operator
+  attr_reader :name
+
   def initialize(name)
     @name = name
-    # func is derived from name
   end
 
   def to_s
@@ -16,4 +17,5 @@ class Operator
     puts rename_me, self
     exit
   end
+
 end

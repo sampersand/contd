@@ -1,23 +1,13 @@
 module Operators
   module ExtendedMethods
     def added(parser:)
-      p 'a'
-      exit
+      parser.result[self::OPERATOR.name] = self::OPERATOR
     end
 
 
 
     def process_stream(stream:, result:, parser:, **_)
-      return unless stream.peek == VALUE
-      args = Container.new
-      args << result.pop
-      name = stream.next
-      i = 0
-      p parser.process_stream(stream: stream, result: args) # WARNING: WILL FAIL WITH `a!`
-      p stream
-      p args
-      exit
-      result << stream.nextKeyword::Call.new(stream.next)
+      return unless stream.peek == self::OPERATOR.name
     end
 
 

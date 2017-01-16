@@ -51,7 +51,7 @@ require_relative 'plugins/operators'
 require_relative 'plugins/containers'
 
 input = '3 + 42 * 5'
-parser = Parser.new
+parser = Parser.new(input)
 parser.add Text
 parser.add Variable
 parser.add Numbers
@@ -61,7 +61,7 @@ parser.add Comments
 parser.add Operators
 parser.add Containers
 
-res = parser.parse(input)
+res = parser.run
 p res.stack
 
 
