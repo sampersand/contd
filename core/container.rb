@@ -37,6 +37,14 @@ class Container
       @stack.empty? && @known.empty?
     end
 
+    def split!
+      [self.class.new(stack: @stack), self.class.new(known: @known)]
+    end
+
+    def split
+      clone.split!
+    end
+
     def clone
       self.class.new(stack: @stack.clone, known: @known.clone)
     end
@@ -65,30 +73,30 @@ class Container
     end
 
   # --- Execution --- #
-    def call!(rename_me:)
-      fail 'Do not run `call` on a Container with rename_me' unless @known.empty?
+    def call!(current)
+      fail 'Do not run `call` on a Container with known' unless @known.empty?
       until @stack.empty?
         case token = shift
         when Keyword::Newline
-          rename_me.pop # and do nothing
+          current.pop # and do nothing
         when Keyword::Get
-          to_get = rename_me.pop
-          result = rename_me[to_get]
+          to_get = current.pop
+          result = current[to_get]
           raise "No such known `#{to_get}` found" unless result
-          rename_me.push result
+          current.push result
         when Keyword::Call
-          func = rename_me.pop
-          func.call(rename_me: rename_me)
+          func = current.pop
+          func.call(current: current)
         else
           fail "Unknown keyword #{token}" if token.is_a?(Keyword)
-          rename_me.push token
+          current.push token
         end
       end
-      rename_me
+      current
     end
 
-    def call(rename_me:)
-      clone.call!(rename_me: rename_me)
+    def call(current)
+      clone.call!(current)
     end
 
 end

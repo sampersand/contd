@@ -13,8 +13,8 @@ class Operator
     "#{self.class}( `#{@name.inspect}` )"
   end
 
-  def call(rename_me:)
-    puts rename_me, self
+  def call(current)
+    puts current, self
     exit
   end
 
