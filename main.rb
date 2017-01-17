@@ -62,11 +62,20 @@ bar = { x! * 3 };
 bar! @ (x = foo!@(x=2;).0;).0
 '
 input = '
-foo = { x! + y! };
-bar = { x! * 3 };
+# foo = { x! + y! };
+# bar = { x! * 3 };
 
-foo!:(x = 4, y = 9)
+# foo!@(x = 4, y = 9) . wheels
 
+car = {
+  wheels = 4;
+  mpg = 4;
+  drive = {
+    "vroom vroom"
+  };
+};
+
+result = car!@().drive.0
 '
 
 

@@ -6,12 +6,7 @@ module Operators
 
 
     def priority(token)
-      return token.priority if token.respond_to?(:priority)
-      case token.to_s
-      when ';' then 25
-      when ',' then 25
-      else 0
-      end
+      token.respond_to?(:priority) ? token.priority : 0
     end
 
     def next_token(parser, token, result)
