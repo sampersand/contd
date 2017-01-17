@@ -32,8 +32,8 @@ input = '
 ((x 3)=!@)foo!@
 '
 
-input = 'a = (2 + 5) @ (1, 2)'
-input = '(2 + 5) @ (3, 5)'
+input = 'a = (2 + 5) @ (1 2)'
+input = '(x!) @ (x = 3;)'
 # input = '1 + 22 * 3 ^ 4'
 
 parser = Parser.new(input)
@@ -41,23 +41,19 @@ parser.add Text
 parser.add Variable
 parser.add Numbers
 parser.add Whitespace
-# parser.add Keywords
 parser.add Comments
-parser.add Operators
 parser.add Containers
+parser.add Operators
+parser.add Keywords
 
 res = parser.run
 
 body, result = res.split
 
-# p body.stack[0].stack[0]
-# p body.stack[0].stack[1].stack[1]
-# p body.stack[1]
-# p body.stack[2]
 
 body.pr 'Body'
-exit
-body.call(Container.new, result).pr
+
+p body.call(Container.new, result)
 
 
 

@@ -100,7 +100,6 @@ class Container
     def call(args, current)
       new_current = args.clone.call!(Container.new(known: current.known.clone))
       current << clone.call!(new_current)
-      pr
       current.stack[-1]
     end
 
@@ -112,6 +111,7 @@ class Container
                         gsub(/Container\(/, '').
                         gsub(/stack: /, '').
                         gsub(/Operator\( `([^`]+)` \)/, '\1').
+                        gsub(/Keyword::(\w+)(?:[(][^)]+[)])?/, '"\1"').
                         gsub(/(?<! )\)/, '')
   end
 end

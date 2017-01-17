@@ -13,6 +13,9 @@ module Operators
     def next_token(parser, token)
       res = ''
       until parser.empty?
+        p parser
+        p token
+        exit if parser.peek == ';'
         if priority(parser, token) >= priority(parser, parser.peek)
           res << parser.next
         else
@@ -29,17 +32,13 @@ module Operators
       res << parser.result.pop
 
       
-      parser.
-        fork(next_token(parser, parser.next)).
-        run.
-        stack.
-        each(&res.method(:<<))
+      parser.fork(next_token(parser, parser.next)).run.stack.each(&res.method(:<<))
       parser.result << res
       parser.result << self::OPERATOR
       parser.result << Keyword::Call.new
-      # exit
-      # parser.result << parser.next(self::OPERATOR.name.length).to_sym # temporary
-
+    rescue parser.class::EOFError => e
+      raise parser.class::EOFError,
+            "Reached end of stream whilst looking for rhs of function (`#{self::OPERATOR}`)"
     end
 
 
