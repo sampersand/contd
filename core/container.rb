@@ -58,8 +58,8 @@ class Container
 
   # --- Representation --- #
     def inspect
-      stack_s = @stack.empty? ? '' : "stack: #{filtered_stack}"
-      known_s = @known.empty? ? '' : "known: #{filtered_known}"
+      stack_s = @stack.empty? ? '' : "stack: #{@stack}"
+      known_s = @known.empty? ? '' : "known: #{@known}"
       sep = stack_s.empty? || known_s.empty? ? '' : ', '
       "#{self.class.name}(#{stack_s}#{sep}#{known_s})"
     end
@@ -67,19 +67,10 @@ class Container
     def to_s
       case
       when empty? then "<>"
-      when @stack.empty? then filtered_known.to_s
-      when @known.empty? then filtered_stack.to_s 
-      else "<#{filtered_stack}, #{filtered_known}>"
+      when @stack.empty? then @known.to_s
+      when @known.empty? then @stack.to_s 
+      else "<#{@stack}, #{@known}>"
       end
-    end
-
-    def filtered_stack
-      @stack
-      # @stack.select{ |e| !e.respond_to?(:keep_in_filter) || e.keep_in_filter }
-    end
-
-    def filtered_known
-      @known.select{ |_, v| !v.respond_to?(:keep_in_filter) || v.keep_in_filter }
     end
 
   # --- Execution --- #
@@ -108,15 +99,27 @@ class Container
 
     def call(args, current)
       new_current = args.clone.call!(Container.new(known: current.known.clone))
-      clone.call!(new_current)
+      current << clone.call!(new_current)
+      pr
+      current.stack[-1]
     end
 
-    def debug_call(args, current)
-      new_current = args.clone.call!(Container.new(known: current.known.clone))
-      clone.call!(new_current)
-    end
 
+    def pr args=nil
+      puts("--#{args}--") if args
+      require 'ap'
+      ap eval to_a.to_s.gsub(/Container\(\)/, '[]').
+                        gsub(/Container\(/, '').
+                        gsub(/stack: /, '').
+                        gsub(/Operator\( `([^`]+)` \)/, '\1').
+                        gsub(/(?<! )\)/, '')
+  end
 end
+
+
+
+
+
 
 
 

@@ -33,7 +33,7 @@ input = '
 '
 
 input = 'a = (2 + 5) @ (1, 2)'
-input = '(2 + 5) @ ()'
+input = '(2 + 5) @ (3, 5)'
 # input = '1 + 22 * 3 ^ 4'
 
 parser = Parser.new(input)
@@ -41,7 +41,7 @@ parser.add Text
 parser.add Variable
 parser.add Numbers
 parser.add Whitespace
-parser.add Keywords
+# parser.add Keywords
 parser.add Comments
 parser.add Operators
 parser.add Containers
@@ -55,7 +55,9 @@ body, result = res.split
 # p body.stack[1]
 # p body.stack[2]
 
-puts body.debug_call(Container.new, result)
+body.pr 'Body'
+exit
+body.call(Container.new, result).pr
 
 
 

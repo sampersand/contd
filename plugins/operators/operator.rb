@@ -24,6 +24,4 @@ class Operator
     end
   end
 
-  def keep_in_filter; false end
-
 end
