@@ -85,8 +85,10 @@ input = <<FINISH
 
 
 x=3;
-res = disp!:(a)
-res = if!:(x! > 3, {'x > 3'}, {'x < 3'});
+#disp!:( if!:(x! > 3, 'x > 3', 'x < 3'))
+if! : (x! >= 3, {
+  disp!:(foo)
+}) 
 
 FINISH
 
@@ -99,8 +101,10 @@ body, result = res.split
 
 
 body.pr 'Body'
-
+puts "\n--[start execution]--"
 res = body.call(Container.new, result)
+puts "--[end execution]--\n\n"
+
 res.pr "result"
 
 

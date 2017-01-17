@@ -76,7 +76,7 @@ class Container
 
   # --- Execution --- #
     def call!(current)
-      fail "Do not run `call` on a Container with known( #{self} )" unless @known.empty?
+      current.known.update @known
       until @stack.empty?
         case token = shift
         when Keyword::Comma
