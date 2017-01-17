@@ -18,10 +18,24 @@ module Operators
           peeked = peeked.stack[-1]
         end
         if priority(token) > priority(peeked)
+          result.stack.pop if result.stack[-1].is_a? Keyword::Comma
           parser.handle_next(result: result)
         else
           break
         end
+      end
+    end
+
+    def add_last(result, to_add) #VERY VERY HACKY
+      if result.stack[-1].is_a?(Keyword::Comma)
+        result.pop
+        add_last(result, to_add)
+      elsif result.stack[-1].is_a?(Keyword::Call)
+        result.pop(3).each(&to_add.method(:push))
+      elsif result.stack[-1].is_a?(Keyword::Get)
+        result.pop(2).each(&to_add.method(:push))
+      else
+        to_add << result.pop
       end
     end
 
@@ -30,13 +44,9 @@ module Operators
 
       parser.next(self::OPERATOR.name.length) #pop this token
       to_add = Container.new # HACKY
-      if result.stack[-1].is_a?(Keyword::Call)
-        result.pop(3).each(&to_add.method(:push))
-      elsif result.stack[-1].is_a?(Keyword::Get)
-        result.pop(2).each(&to_add.method(:push))
-      else
-        to_add << result.pop
-      end
+
+      add_last(result, to_add)
+
       next_token(parser, self::OPERATOR, to_add)
       result << to_add
       result << self::OPERATOR

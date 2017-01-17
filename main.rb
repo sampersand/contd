@@ -67,6 +67,7 @@ input = '
 
 # foo!@(x = 4, y = 9) . wheels
 
+
 car = {
   wheels = 4;
   mpg = 4;
@@ -74,8 +75,8 @@ car = {
     "vroom vroom"
   };
 };
-
-result = car!@().drive.0
+;
+disp! @ (car!@().drive)
 '
 
 
