@@ -32,7 +32,14 @@ input = '
 ((x 3)=!@)foo!@
 '
 
-input = '(x!)@(x=3;4)'
+input = ' (!!) @( "y"=4;x="y";x) '
+input = '
+car = {
+  wheels = 4;
+};
+
+car! @ ()
+'
 # input = '4*2+3^4'
 
 
@@ -56,7 +63,8 @@ body, result = res.split
 
 body.pr 'Body'
 
-p body.call(Container.new, result)
+
+body.call(Container.new, result).pr "result"
 
 
 

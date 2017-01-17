@@ -7,6 +7,7 @@ module Operators
 
     def priority(token)
       case token
+      when ';' then 25
       when '=' then 20
       when '^' then 10
       when '*' then 11
