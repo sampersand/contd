@@ -19,10 +19,10 @@ class Keyword
   end
 
   class Newline < Keyword
-    PRIORITY = 30
+    PRIORITY = 110
   end
   class Comma < Keyword
-    PRIORITY = 30
+    PRIORITY = 110
   end
 end
 

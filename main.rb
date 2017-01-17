@@ -82,7 +82,7 @@ car = {
 
 input = <<FINISH
 
-1 < 3
+4 < 3
 /*
 x=3;
 if!:([x > 3],
