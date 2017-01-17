@@ -9,12 +9,12 @@ module Operators
       case token
       when ';' then 25
       when '=' then 20
-      when '^' then 10
-      when '*' then 11
-      when '@' then 11
-      when '%' then 11
       when '+' then 12
       when '-' then 12
+      when '*' then 11
+      when '%' then 11
+      when '^' then 10
+      when '.' then 6
       when '@' then 5
       else 0
       end
@@ -28,7 +28,7 @@ module Operators
         else
           peeked = peeked.stack[-1]
         end
-        if priority(token) >= priority(peeked.to_s)
+        if priority(token) > priority(peeked.to_s)
           parser.handle_next(result: result)
         else
           break

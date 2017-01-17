@@ -1,5 +1,6 @@
-require_relative 'operators_extend'
-require_relative 'operator'
+require_relative '../operators_extend'
+require_relative '../operator'
+
 
 module Operators::Assign
   extend Operators

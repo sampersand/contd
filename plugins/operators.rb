@@ -1,12 +1,11 @@
 require_relative 'plugin_module'
 
 require_relative 'operators/math'
-require_relative 'operators/assign'
-require_relative 'operators/call'
+require_relative 'operators/misc'
 
 module Operators
   extend PluginModule
 
-  PLUGINS = [Math, Assign, Call]
+  PLUGINS = [Math, Misc]
 
 end

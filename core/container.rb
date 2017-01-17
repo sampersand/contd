@@ -34,6 +34,7 @@ class Container
     end
 
   # --- Stack & Hash Functions --- #
+
     def empty?
       @stack.empty? && @known.empty?
     end

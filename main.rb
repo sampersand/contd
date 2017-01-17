@@ -53,14 +53,22 @@ foo! @ (4 5 6)
 input = '
 my_function = {
   wheels = 4;
-  1
+  maker = "honda";
+  0 = 4;
+  4
   # 2
   # 4 + x! ^ 3
 };
 args=(x=3;);
-my_function! @ args!
+y = my_function! @ args!;
+y!.$ 0
 '
 
+input = '
+foo = { x! + 4 };
+bar = { x! * 3 };
+bar! @ (x = foo!@(x=2;).0;).0
+'
 
 
 parser = Parser.new(input)

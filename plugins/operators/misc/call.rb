@@ -1,5 +1,5 @@
-require_relative 'operators_extend'
-require_relative 'operator'
+require_relative '../operators_extend'
+require_relative '../operator'
 
 module Operators::Call
   extend Operators
@@ -10,8 +10,5 @@ module Operators::Call
     func.call(f_args, current.clone)
     
   }
-
-
-  module_function
 
 end

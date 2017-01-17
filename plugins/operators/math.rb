@@ -9,9 +9,9 @@ require_relative 'math/pow'
 
 module Operators
   module Math
-    extend PluginModule
+  extend PluginModule
 
-    PLUGINS = [Add, Sub, Mul, Div, Mod, Pow]
-
+  PLUGINS = [Add, Sub, Mul, Div, Mod, Pow]
+  
   end
 end
