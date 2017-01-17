@@ -103,7 +103,6 @@ class Container
     def call(args, current)
       new_current = args.clone.call!(Container.new(known: current.known.clone))
       current << clone.call!(new_current)
-      current.stack[-1]
     end
 
 

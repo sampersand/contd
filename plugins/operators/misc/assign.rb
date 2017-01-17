@@ -6,7 +6,7 @@ module Operators::Assign
   extend Operators
 
   OPERATOR = Operator.new( '=', 100 ){ |args, current|
-    current.[]=(*args.pop(2))
+    current << current.[]=(*args.pop(2))
   }
 
 end

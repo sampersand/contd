@@ -7,8 +7,7 @@ module Operators::Call
   OPERATOR = Operator.new( '@', 5 ){ |args, current|
     f_args = args.pop
     func = args.pop
-    func.call(f_args, current.clone)
-    
+    func.call(f_args, current)
   }
 
 end

@@ -8,7 +8,7 @@ module Operators::Index
     OPERATOR = Operator.new( '.$', 5 ){ |args, current|
       position = args.pop
       object = args.pop
-      object.stack.fetch(position){ raise "Stack position not found `#{position}`" }
+      current << object.stack.fetch(position){ raise "Stack position not found `#{position}`" }
     }
 
   end

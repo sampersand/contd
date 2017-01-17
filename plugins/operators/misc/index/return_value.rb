@@ -10,7 +10,7 @@ module Operators::Index
     OPERATOR = Operator.new( ':', 5 ){ |args, current|
       result = Operators::Call::OPERATOR.call(args, current, override_args: false)
       Stack::OPERATOR.call(result << -1, current, override_args: false)
-      current.pop
+      current << current.pop
     }
 
   end

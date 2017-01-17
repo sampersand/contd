@@ -11,26 +11,18 @@ module Functions::If
     condition = args.pop
 
     if condition
-      if_true
+      current << if_true.call(Container.new, current)
+      puts "res: #{res}, currnet: #{current}"
+      current['y']=4
     elsif if_false
       if_false
     else
+      nil
     end
 
   }
   
 end
-
-
-
-
-
-
-
-
-
-
-
 
 
 

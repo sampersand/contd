@@ -18,7 +18,7 @@ class Operator
   def call(args, current, override_args: true)
     args = args.call(Container.new, current.clone) if override_args
     if @func
-      current << @func.call(args, current)
+      @func.call(args, current)
     else
       current << args.stack.reduce(&@name.to_sym)
     end

@@ -85,10 +85,8 @@ input = <<FINISH
 
 
 x=3;
-#disp!:( if!:(x! > 3, 'x > 3', 'x < 3'))
-if! : (x! >= 3, {
-  disp!:(foo)
-}) 
+
+if! @ (3 <= x!, { y = 3 }) 
 
 FINISH
 

@@ -10,7 +10,7 @@ module Operators::Index
       object = args.pop
       raise "Attribute not found `#{attribute}`" unless object.known.fetch(attribute, false) ||
                                                         object.stack.fetch(attribute, false)
-      object.known.fetch(attribute) || object.fetch(attribute)
+      current << object.known.fetch(attribute) || object.fetch(attribute)
     }
 
   end
