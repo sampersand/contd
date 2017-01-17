@@ -1,9 +1,8 @@
 class Operator
-  attr_reader :name, :priority
+  attr_reader :name
 
-  def initialize(name, priority, &func)
+  def initialize(name, &func)
     @name = name
-    @priority = priority
     @func = func
   end
 

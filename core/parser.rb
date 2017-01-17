@@ -33,8 +33,12 @@ class Parser
   def handle_next
     @plugins.each do |plugin|
       res = plugin.handle_next( self )
-      return res if res
+      return self if res
     end
+  end
+
+  def peek_handle_next
+    clone.handle_next
   end
 
   def fork(input)
