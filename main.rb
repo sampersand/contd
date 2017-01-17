@@ -82,14 +82,12 @@ car = {
 
 input = <<FINISH
 
-if!:(5 < 3, {5}, {6}):()
-/*
+
+
 x=3;
-if!:([x > 3],
-  {'x > 3'},
-  {'x < 3'}
-)
-*/
+res = disp!:(a)
+res = if!:(x! > 3, {'x > 3'}, {'x < 3'});
+
 FINISH
 
 require_relative 'plugins/standard'
