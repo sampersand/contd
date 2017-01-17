@@ -8,7 +8,7 @@ module Operators::Index
     OPERATOR = Operator.new( '.?', 5 ){ |args, current|
       attribute = args.pop
       object = args.pop
-      object.stack[attribute] or raise "Known attribute not found `#{attribute}`"
+      object.known.fetch(attribute){ raise "Known not found `#{position}`" }
     }
 
   end
