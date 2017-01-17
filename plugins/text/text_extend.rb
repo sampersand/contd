@@ -19,7 +19,8 @@ module Text
           end
         end
       end
-      result << start_quote + body
+      result << body[0, body.length - 1]
+      # result << start_quote + body
       true
     rescue parser.class::EOFError => e
       raise parser.class::EOFError,

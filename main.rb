@@ -80,10 +80,10 @@ car = {
 
 '
 
-input = '
+input = %|
 x=3;
-disp! @ (!x)
-'
+disp! @ (x!, (("3+34"),), 4, sep=", ";)
+|
 
 require_relative 'plugins/standard'
 parser = Parser.new(input)

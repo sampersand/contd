@@ -69,7 +69,7 @@ class Container
       case
       when empty? then "<>"
       when @stack.empty? then @known.to_s
-      when @known.empty? then @stack.to_s 
+      when @known.empty? then "[#{ @stack.join(', ') }]"
       else "<#{@stack}, #{@known}>"
       end
     end

@@ -13,9 +13,9 @@ require_relative 'functions'
 module Standard
   extend PluginModule
 
-  PLUGINS = [Whitespace, Text, Containers,
-             Numbers, Variable, Comments,
-             Operators, Keywords, Functions]
+  PLUGINS = [Functions, Text, Containers,
+             Numbers, Comments,
+             Operators, Keywords, Variable, Whitespace]
 end
 
 
