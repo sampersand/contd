@@ -82,7 +82,8 @@ car = {
 
 input = %|
 x=3;
-disp! @ (x!, (("3+34"),), 4, sep=", ";)
+#disp!:(if!:[x! > 3, {'x > 3'}, {'x < 3'}])
+if!:([x > 3], {'x > 3'}, {'x < 3'})
 |
 
 require_relative 'plugins/standard'
