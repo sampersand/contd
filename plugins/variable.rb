@@ -8,7 +8,7 @@ module Variable
   def handle_next(parser)
     return unless VARIABLE_START_REGEX =~ parser.peek
     res = parser.next + parser.next_while(&VARIABLE_BODY_REGEX.method(:=~))
-    res.empty? ? nil : parser.result << res
+    res.empty? ? nil : (parser.result << res) && true
   end
 end
 

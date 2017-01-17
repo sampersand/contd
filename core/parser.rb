@@ -6,6 +6,7 @@ class Parser
     module_function
     def handle_next( parser )
       parser.result << parser.next
+      true
     end
   end
 
@@ -38,6 +39,10 @@ class Parser
 
   def fork(input)
     self.class.new(input, plugins: @plugins.clone)
+  end
+
+  def clone
+    self.class.new(@chars.clone.join, plugins: @plugins.clone, result: @result.clone)
   end
 
   # --- Stream --- #

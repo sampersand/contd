@@ -33,16 +33,16 @@ input = '
 '
 
 input = 'a = (2 + 5) @ (1 2)'
-input = '(x!) @ (x = 3;)'
+input = '(xyz!) @ (xyz = 345)'
 # input = '1 + 22 * 3 ^ 4'
 
 parser = Parser.new(input)
+parser.add Containers
 parser.add Text
 parser.add Variable
 parser.add Numbers
 parser.add Whitespace
 parser.add Comments
-parser.add Containers
 parser.add Operators
 parser.add Keywords
 

@@ -11,18 +11,22 @@ module Operators
     end
 
     def next_token(parser, token)
-      res = ''
-      until parser.empty?
-        p parser
-        p token
-        exit if parser.peek == ';'
-        if priority(parser, token) >= priority(parser, parser.peek)
-          res << parser.next
-        else
-          break
-        end
+      100.times do 
       end
-      res
+      parser.result
+      # res = ''
+      # until parser.empty?
+      #   pc = parser.clone
+      #   pc.handle_next
+      #   if priority(parser, token) >= priority(parser, pc.result.pop)
+      #     parser.handle_next
+      #     p parser.result, parser
+      #     res << parser.result.pop
+      #   else
+      #     break
+      #   end
+      # end
+      # res
     end
 
     def handle_next(parser)
@@ -32,7 +36,7 @@ module Operators
       res << parser.result.pop
 
       
-      parser.fork(next_token(parser, parser.next)).run.stack.each(&res.method(:<<))
+      next_token(parser, parser.next).stack.each(&res.method(:<<))
       parser.result << res
       parser.result << self::OPERATOR
       parser.result << Keyword::Call.new
