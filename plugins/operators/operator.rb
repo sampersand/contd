@@ -15,8 +15,8 @@ class Operator
     "#{self.class}( `#{@name.inspect}`, `#{@priority.inspect} )"
   end
 
-  def call(args, current)
-    args = args.call(Container.new, current.clone)
+  def call(args, current, override_args: true)
+    args = args.call(Container.new, current.clone) if override_args
     if @func
       current << @func.call(args, current)
     else

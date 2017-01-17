@@ -65,7 +65,7 @@ input = '
 foo = { x! + 4 };
 bar = { x! * 3 };
 
-foo! @ (x = 4)
+foo!:(x = 4, y=4)
 
 '
 
