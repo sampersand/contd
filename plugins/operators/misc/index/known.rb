@@ -5,9 +5,11 @@ module Operators::Index
   module Known
     extend Operators
 
-    OPERATOR = Operator.new( '.?' ){ |args, current|
+    OPERATOR = Operator.new( '.?', 6 ){ |args, current|
       attribute = args.pop
       object = args.pop
+      p object, attribute
+      exit
       object.stack[attribute] or raise "Known attribute not found `#{attribute}`"
     }
 

@@ -1,8 +1,9 @@
 class Operator
-  attr_reader :name
+  attr_reader :name, :priority
 
-  def initialize(name, &func)
+  def initialize(name, priority, &func)
     @name = name
+    @priority = priority
     @func = func
   end
 
@@ -11,7 +12,7 @@ class Operator
   end
 
   def inspect
-    "#{self.class}( `#{@name.inspect}` )"
+    "#{self.class}( `#{@name.inspect}`, `#{@priority.inspect} )"
   end
 
   def call(args, current)

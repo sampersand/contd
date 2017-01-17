@@ -114,7 +114,7 @@ class Container
                         gsub(/, known: */, '').
                         gsub(/known: */, '').
                         gsub(/\{[^}]*\}/, '').
-                        gsub(/Operator\( `([^`]+)` \)/, '\1').
+                        gsub(/Operator\( `([^`]+)`[^)]+ \)/, '\1').
                         gsub(/Keyword::(\w+)(?:[(][^)]+[)])?/, '"\1"').
                         gsub(/(?<! )\)/, '')
   end

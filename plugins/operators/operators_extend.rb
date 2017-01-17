@@ -6,15 +6,14 @@ module Operators
 
 
     def priority(token)
-      case token
+      return token.priority if token.respond_to?(:priority)
+      case token.to_s
       when ';' then 25
       when '=' then 20
-      when '+' then 12
-      when '-' then 12
-      when '*' then 11
-      when '%' then 11
+      when '+', '+' then 12
+      when '*', '/', '%' then 11
       when '^' then 10
-      when '.' then 6
+      when '.', '.$', '.?' then 6
       when '@' then 5
       else 0
       end
@@ -28,7 +27,7 @@ module Operators
         else
           peeked = peeked.stack[-1]
         end
-        if priority(token) > priority(peeked.to_s)
+        if priority(token) > priority(peeked)
           parser.handle_next(result: result)
         else
           break
@@ -39,7 +38,8 @@ module Operators
     def handle_next(parser:, result:)
       return unless parser.peek(self::OPERATOR.name.length) == self::OPERATOR.name.to_s
 
-      to_add = Container.new
+      parser.next(self::OPERATOR.name.length) #pop this token
+      to_add = Container.new # HACKY
       if result.stack[-1].is_a?(Keyword::Call)
         result.pop(3).each(&to_add.method(:push))
       elsif result.stack[-1].is_a?(Keyword::Get)
@@ -47,8 +47,7 @@ module Operators
       else
         to_add << result.pop
       end
-      next_token(parser, parser.next(self::OPERATOR.name.length), to_add)
-      p to_add
+      next_token(parser, self::OPERATOR, to_add)
       result << to_add
       result << self::OPERATOR
       result << Keyword::Call.new

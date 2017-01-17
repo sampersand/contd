@@ -32,6 +32,7 @@ class Parser
   def handle_next(result:)
     @plugins.each do |plugin|
       res = plugin.handle_next(parser: self, result: result )
+      return handle_next(result: result) if res == :retry
       return result if res
     end
   end

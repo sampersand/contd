@@ -15,14 +15,6 @@ w = ten0_1 !
 v = 
 ab'
 
-require_relative 'plugins/numbers'
-require_relative 'plugins/whitespace'
-require_relative 'plugins/text'
-require_relative 'plugins/keywords'
-require_relative 'plugins/variable'
-require_relative 'plugins/comments'
-require_relative 'plugins/operators'
-require_relative 'plugins/containers'
 
 input = '3 + 42 * 5'
 input = '(3 (4)-!@)+!@'
@@ -69,26 +61,24 @@ foo = { x! + 4 };
 bar = { x! * 3 };
 bar! @ (x = foo!@(x=2;).0;).0
 '
+input = '
+foo = { x! + 4 };
+bar = { x! * 3 };
+
+foo! @ (x = 4)
+
+'
 
 
+require_relative 'plugins/standard'
 parser = Parser.new(input)
-parser.add Containers
-parser.add Text
-parser.add Numbers
-parser.add Whitespace
-parser.add Variable
-parser.add Comments
-parser.add Operators
-parser.add Keywords
-parser.add Containers
+parser.add Standard
 
 res = parser.run
-
 body, result = res.split
 
 
 body.pr 'Body'
-
 
 res = body.call(Container.new, result)
 res.pr "result"
