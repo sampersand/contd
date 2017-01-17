@@ -32,7 +32,9 @@ input = '
 ((x 3)=!@)foo!@
 '
 
-input = '1 + 22 * 3 ^ 4'
+input = 'a = (2 + 5) @ (1, 2)'
+input = '(2 + 5) @ ()'
+# input = '1 + 22 * 3 ^ 4'
 
 parser = Parser.new(input)
 parser.add Text
@@ -47,12 +49,14 @@ parser.add Containers
 res = parser.run
 
 body, result = res.split
+
 # p body.stack[0].stack[0]
 # p body.stack[0].stack[1].stack[1]
 # p body.stack[1]
 # p body.stack[2]
 
 puts body.debug_call(Container.new, result)
+
 
 
 

@@ -7,7 +7,8 @@ require_relative 'keywords/newline'
 module Keywords
   extend PluginModule
 
-  PLUGINS = [Get, Call, Newline]
+  PLUGINS = [Get, Newline]
+  # PLUGINS = [Get, Call, Newline]
 
 end
 
