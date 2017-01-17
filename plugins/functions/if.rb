@@ -18,6 +18,22 @@ module Functions::If
     end
 
   }
+  def self.handle_next(parser:, result:)
+    return unless parser.peek(self::FUNCTION.name.length) == self::FUNCTION.name.to_s
+    # result << parser.next(self::FUNCTION.name.length)
+    # result[self::FUNCTION.name] = self::FUNCTION
+    parser.next(self::FUNCTION.name.length) # pop the name
+    args = Container.new
+    parser.handle_next(result: args) until args.stack.length == 2
+    p parser.peek_handle_next(result: Container.new)
+
+    exit
+    result << args
+    result << self::FUNCTION
+    result << Keyword::Call.new
+    parser.feed(':', '(', ')')
+    :retry
+  end
   
 end
 

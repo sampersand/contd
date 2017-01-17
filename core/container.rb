@@ -117,9 +117,12 @@ class Container
                         gsub(/, known: */, '').
                         gsub(/known: */, '').
                         gsub(/\{[^}]*\}/, '').
+                        gsub(/Function\( `([^`]+)` \)/, '\1').
                         gsub(/Operator\( `([^`]+)`[^)]+ \)/, '\1').
                         gsub(/Keyword::(\w+)(?:[(][^)]+[)])?/, '"\1"').
                         gsub(/(?<! )\)/, '')
+      rescue SyntaxError, NoMethodError
+        p self
   end
 end
 
