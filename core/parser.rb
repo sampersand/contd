@@ -37,7 +37,7 @@ class Parser
   end
 
   def peek_handle_next(result:)
-    clone.handle_next(result: result)
+    clone.handle_next(result: result.clone)
   end
 
   def fork(input)

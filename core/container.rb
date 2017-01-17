@@ -10,7 +10,7 @@ class Container
 
   # --- Stack Functions --- #
     def pop(*a); @stack.pop(*a) end #*a should be [] or [amnt]
-    def push(obj) @stack.push obj end
+    def push(obj) @stack.push obj; self end
     def delete_at(pos) @stack.delete_at pos end
     def shift(*a); @stack.shift(*a) end #*a should be [] or [amnt]
     def unshift(obj) @stack.unshift obj end
