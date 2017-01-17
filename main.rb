@@ -85,7 +85,7 @@ input = <<FINISH
 
 
 x=3;
-res = disp!:(a)
+
 res = if!:(x! > 3, {'x > 3'}, {'x < 3'});
 
 FINISH
