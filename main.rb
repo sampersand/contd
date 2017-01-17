@@ -76,9 +76,14 @@ car = {
   };
 };
 ;
-disp! @ (car!@().drive)
+#disp! @ (car!@().drive)
+
 '
 
+input = '
+x=3;
+disp! @ (!x)
+'
 
 require_relative 'plugins/standard'
 parser = Parser.new(input)
