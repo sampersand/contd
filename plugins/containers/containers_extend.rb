@@ -1,7 +1,7 @@
 module Containers
 
   module ExtendedMethods
-    def handle_next(parser)
+    def handle_next(parser:, result:)
         return unless parser.peek == self::START
 
         parser.next # pop START
@@ -20,8 +20,9 @@ module Containers
 
         parser.next # pop STOP
 
-        parser.result << parser.fork(body).run
+        result << parser.fork(body).run
         true
+
       rescue parser.class::EOFError => e
         raise parser.class::EOFError,
               "Reached end of stream whilst looking for end of container (`#{self::STOP.inspect}`)"

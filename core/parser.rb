@@ -4,20 +4,17 @@ class Parser
   EOFError = Class.new( SyntaxError )
   module DefaultPlugin
     module_function
-    def handle_next( parser )
-      parser.result << parser.next
+    def handle_next( parser:, result: )
+      result << parser.next
       true
     end
   end
 
   attr_reader :plugins
-  attr_reader :result
-  attr_writer :result
 
-  def initialize(input, plugins: nil, result: nil)
+  def initialize(input, plugins: nil)
     @chars = input.chars
     @plugins = plugins || [DefaultPlugin]
-    @result = result || Container.new
   end
 
   # --- Parsing --- #
@@ -27,19 +24,20 @@ class Parser
   end
 
   def run
-    handle_next until empty?
-    @result
+    result = Container.new
+    handle_next(result: result) until empty?
+    result
   end
 
-  def handle_next
+  def handle_next(result:)
     @plugins.each do |plugin|
-      res = plugin.handle_next( self )
-      return self if res
+      res = plugin.handle_next(parser: self, result: result )
+      return result if res
     end
   end
 
-  def peek_handle_next
-    clone.handle_next
+  def peek_handle_next(result:)
+    clone.handle_next(result: result)
   end
 
   def fork(input)
@@ -47,7 +45,7 @@ class Parser
   end
 
   def clone
-    self.class.new(@chars.clone.join, plugins: @plugins.clone, result: @result.clone)
+    self.class.new(@chars.clone.join, plugins: @plugins.clone)
   end
 
   # --- Stream --- #

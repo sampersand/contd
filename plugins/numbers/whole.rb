@@ -5,9 +5,9 @@ module Numbers
 
     module_function
 
-    def handle_next(parser)
+    def handle_next(parser:, result:)
       (res = parser.next_while(&self::WHOLE_REGEX.method(:=~))).empty? and return
-      parser.result << res.to_i
+      result << res.to_i
       true
     end
 

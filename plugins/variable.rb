@@ -5,10 +5,10 @@ module Variable
 
   module_function
 
-  def handle_next(parser)
+  def handle_next(parser:, result:)
     return unless VARIABLE_START_REGEX =~ parser.peek
     res = parser.next + parser.next_while(&VARIABLE_BODY_REGEX.method(:=~))
-    res.empty? ? nil : (parser.result << res) && true
+    res.empty? ? nil : (result << res) && true
   end
 end
 

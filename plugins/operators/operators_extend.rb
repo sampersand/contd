@@ -19,31 +19,27 @@ module Operators
       end
     end
 
-    def next_token(parser, token)
-      res = []
+    def next_token(parser, token, result)
       until parser.empty?
-        peeked = parser.peek_handle_next.result.stack.last
+        peeked = parser.peek_handle_next(result: result).stack.last
+        p "peekeD: " + peeked.to_s, result.to_s
         if priority(token) >= priority(peeked)
-          p "token: #{token}, #{peeked}, #{priority(token)} > #{priority(parser.peek)}"
-          res << parser.handle_next.result
+          parser.handle_next(result: result)
         else
           break
         end
       end
     end
 
-    def handle_next(parser)
+    def handle_next(parser:, result:)
       return unless parser.peek(self::OPERATOR.name.length) == self::OPERATOR.name.to_s
 
-      res1 = parser.result
-      parser.result = Container.new
-      parser.result << res1.pop
+      to_add = Container.new
 
-      next_token(parser, parser.next(self::OPERATOR.name.length))
-      res1 << parser.result
-      res1 << self::OPERATOR
-      res1 << Keyword::Call.new
-      parser.result = res1
+      next_token(parser, parser.next(self::OPERATOR.name.length), to_add)
+      result << to_add
+      result << self::OPERATOR
+      result << Keyword::Call.new
 
     rescue parser.class::EOFError => e
       raise parser.class::EOFError,

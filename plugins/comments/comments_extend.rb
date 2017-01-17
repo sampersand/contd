@@ -1,6 +1,6 @@
 module Comments
   module ExtendedMethods
-    def handle_next(parser)
+    def handle_next(parser:, **_)
       return unless parser.peek(self::START.length) == self::START
 
       parser.next(self::START.length) #to remove the START

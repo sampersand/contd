@@ -1,7 +1,7 @@
 module Text
   module ExtendedMethods
 
-    def handle_next(parser)
+    def handle_next(parser:, result:)
       fail "this only works for quotes and esapes of len 1" unless self::QUOTE.length == 1 &&
                                                                    self::ESCAPE.length == 1
       return unless parser.peek == self::QUOTE
@@ -19,7 +19,7 @@ module Text
           end
         end
       end
-      parser.result << start_quote + body
+      result << start_quote + body
       true
     rescue parser.class::EOFError => e
       raise parser.class::EOFError,
