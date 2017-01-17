@@ -110,8 +110,8 @@ class Container
       ap eval to_a.to_s.gsub(/Container\(\)/, '[]').
                         gsub(/Container\(/, '').
                         gsub(/stack: /, '').
-                        gsub(/, known: /, '').
-                        gsub(/known: /, '').
+                        gsub(/, known: */, '').
+                        gsub(/known: */, '').
                         gsub(/\{[^}]*\}/, '').
                         gsub(/Operator\( `([^`]+)` \)/, '\1').
                         gsub(/Keyword::(\w+)(?:[(][^)]+[)])?/, '"\1"').

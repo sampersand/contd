@@ -32,25 +32,43 @@ input = '
 ((x 3)=!@)foo!@
 '
 
-input = ' (!!) @( "y"=4;x="y";x) '
+# input = ' (!!) @ ( y = 4; x = y; x) '
+# input = '
+# car = {
+#   wheels = 4;
+# };
+
+# car! @ ()
+# '
+
 input = '
-car = {
-  wheels = 4;
-};
-
-car! @ ()
+foo = {
+  x = !;
+  y = !;
+  z = !;
+}
+foo! @ (4 5 6)
 '
-# input = '4*2+3^4'
+
+input = '
+my_function = {
+  wheels = 4;
+  1
+  # 2
+  # 4 + x! ^ 3
+};
+args=(x=3;);
+my_function! @ args!
+'
 
 
-# input = '1 + 22 * 3 ^ 4'
 
 parser = Parser.new(input)
 parser.add Containers
 parser.add Text
-parser.add Variable
 parser.add Numbers
 parser.add Whitespace
+parser.add Variable
 parser.add Comments
 parser.add Operators
 parser.add Keywords
@@ -64,22 +82,8 @@ body, result = res.split
 body.pr 'Body'
 
 
-body.call(Container.new, result).pr "result"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+res = body.call(Container.new, result)
+res.pr "result"
 
 
 
