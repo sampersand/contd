@@ -12,6 +12,7 @@ class Parser
 
   attr_reader :plugins
   attr_reader :result
+  attr_writer :result
 
   def initialize(input, plugins: nil, result: nil)
     @chars = input.chars

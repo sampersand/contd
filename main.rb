@@ -33,6 +33,8 @@ input = '
 '
 
 input = '(x!)@(x=3;4)'
+input = '1*2+3^4'
+
 # input = '1 + 22 * 3 ^ 4'
 
 parser = Parser.new(input)
