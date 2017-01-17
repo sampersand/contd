@@ -16,7 +16,12 @@ class Operator
   end
 
   def call(args, current, override_args: true)
-    args = args.call(Container.new, current.clone) if override_args
+    if override_args
+      new_current = current.clone
+      args.call(Container.new, new_current)
+      args = new_current.pop
+    end
+
     if @func
       @func.call(args, current)
     else

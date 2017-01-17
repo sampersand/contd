@@ -7,6 +7,6 @@ require_relative 'operators/comparison'
 module Operators
   extend PluginModule
 
-  PLUGINS = [Math, Misc, Comparison]
+  PLUGINS = [Comparison, Math, Misc]
 
 end

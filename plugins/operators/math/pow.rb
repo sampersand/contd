@@ -7,7 +7,7 @@ module Operators::Pow
   OPERATOR = Operator.new( '^', 10 ){ |args, current|
     pow = args.pop
     base = args.pop
-    base ** pow
+    current << base ** pow
   }
 
 end

@@ -16,7 +16,7 @@ class Function
 
   def call(args, current, override_args: true)
     args = args.call(Container.new, current.clone) if override_args
-    current << @func.call(args, current)
+    @func.call(args, current)
   end
 
 end

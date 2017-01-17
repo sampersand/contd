@@ -2,8 +2,11 @@ module Functions
   module ExtendedMethods
     def handle_next(parser:, result:)
       return unless parser.peek(self::FUNCTION.name.length) == self::FUNCTION.name.to_s
-      result << parser.next(self::FUNCTION.name.length)
-      result[self::FUNCTION.name] = self::FUNCTION
+      
+      parser.next(self::FUNCTION.name.length) # to pop it 
+
+      result << self::FUNCTION
+      parser.feed('@') #todo update this
       true
     end
   end

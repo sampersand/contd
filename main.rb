@@ -85,9 +85,8 @@ input = <<FINISH
 
 
 x=3;
-
-if! @ (3 <= x!, { y = 3 }) 
-
+y = if (2 <= x!, {4}, {5});
+  
 FINISH
 
 require_relative 'plugins/standard'
@@ -104,6 +103,11 @@ res = body.call(Container.new, result)
 puts "--[end execution]--\n\n"
 
 res.pr "result"
+
+
+
+
+
 
 
 

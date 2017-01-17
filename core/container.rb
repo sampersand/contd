@@ -103,6 +103,7 @@ class Container
     def call(args, current)
       new_current = args.clone.call!(Container.new(known: current.known.clone))
       current << clone.call!(new_current)
+
     end
 
 
@@ -115,9 +116,13 @@ class Container
                         gsub(/, known: */, '').
                         gsub(/known: */, '').
                         gsub(/\{[^}]*\}/, '').
+                        gsub(/Function\( `([^`]+)` \)/, '\1').
                         gsub(/Operator\( `([^`]+)`[^)]+ \)/, '\1').
                         gsub(/Keyword::(\w+)(?:[(][^)]+[)])?/, '"\1"').
                         gsub(/(?<! )\)/, '')
+      rescue SyntaxError => e
+        p self
+  
   end
 end
 

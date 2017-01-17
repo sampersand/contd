@@ -11,7 +11,7 @@ module Operators
   module Comparison
     extend PluginModule
 
-    PLUGINS = [Less, Greater, LessEqual, GreaterEqual, Equal, NotEqual]
+    PLUGINS = [LessEqual, GreaterEqual, Less, Greater, Equal, NotEqual]
     
   end
 end
