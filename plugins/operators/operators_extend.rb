@@ -9,12 +9,7 @@ module Operators
       return token.priority if token.respond_to?(:priority)
       case token.to_s
       when ';' then 25
-      when '=' then 20
-      when '+', '+' then 12
-      when '*', '/', '%' then 11
-      when '^' then 10
-      when '.', '.$', '.?' then 6
-      when '@' then 5
+      when ',' then 25
       else 0
       end
     end

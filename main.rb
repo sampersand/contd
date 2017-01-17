@@ -62,10 +62,10 @@ bar = { x! * 3 };
 bar! @ (x = foo!@(x=2;).0;).0
 '
 input = '
-foo = { x! + 4 };
+foo = { x! + y! };
 bar = { x! * 3 };
 
-foo!:(x = 4, y=4)
+foo!:(x = 4, y = 9)
 
 '
 

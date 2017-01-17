@@ -15,6 +15,7 @@ end
 Keyword::Get = Class.new(Keyword)
 Keyword::Call = Class.new(Keyword)
 Keyword::Newline = Class.new(Keyword)
+Keyword::Comma = Class.new(Keyword)
 
 
 

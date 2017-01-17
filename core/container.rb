@@ -79,6 +79,8 @@ class Container
       fail 'Do not run `call` on a Container with known' unless @known.empty?
       until @stack.empty?
         case token = shift
+        when Keyword::Comma
+          # do literally nothing
         when Keyword::Newline
           current.pop # and do nothing
         when Keyword::Get
