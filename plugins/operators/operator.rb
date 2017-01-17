@@ -1,18 +1,18 @@
 class Operator
-  attr_reader :name, :priority
+  attr_reader :names, :priority
 
-  def initialize(name, priority, &func)
-    @name = name
+  def initialize(*names, priority:, &func)
+    @names = names
     @priority = priority
     @func = func
   end
 
   def to_s
-    @name.to_s
+    @names.to_s
   end
 
   def inspect
-    "#{self.class}( `#{@name.inspect}`, `#{@priority.inspect} )"
+    "#{self.class}( `#{@names[0].inspect}`, `#{@priority.inspect} )"
   end
 
   def call(args, current, override_args: true)
@@ -20,8 +20,20 @@ class Operator
     if @func
       current << @func.call(args, current)
     else
-      current << args.stack.reduce(&@name.to_sym)
+      current << args.stack.reduce(&@names[0].to_sym) #0th name is the keyword
     end
   end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+

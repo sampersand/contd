@@ -40,9 +40,13 @@ module Operators
     end
 
     def handle_next(parser:, result:)
-      return unless parser.peek(self::OPERATOR.name.length) == self::OPERATOR.name.to_s
-
-      parser.next(self::OPERATOR.name.length) #pop this token
+      name = nil
+      self::OPERATOR.names.each do |n|
+        break if name
+        name = n if parser.peek(n.length) == n
+      end
+      return unless name
+      parser.next(name.length) #pop this token
       to_add = Container.new # HACKY
 
       add_last(result, to_add)

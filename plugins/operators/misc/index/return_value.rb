@@ -7,7 +7,7 @@ module Operators::Index
   module ReturnValue
     extend Operators
 
-    OPERATOR = Operator.new( ':', 5 ){ |args, current|
+    OPERATOR = Operator.new( ':', priority: 5 ){ |args, current|
       result = Operators::Call::OPERATOR.call(args, current, override_args: false)
       Stack::OPERATOR.call(result << -1, current, override_args: false)
       current.pop

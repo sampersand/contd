@@ -4,6 +4,6 @@ require_relative '../operator'
 module Operators::Mul
   extend Operators
 
-  OPERATOR = Operator.new '*', 11
+  OPERATOR = Operator.new '*', priority: 11
 
 end

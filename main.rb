@@ -84,17 +84,12 @@ input = <<FINISH
 
 
 
-x=3;
-] = 4;
-l = ];
-[l!;
-disp(]!);
-# exit
-# if (x! > 3){
-#   'x > 3'
-# }else{
-#   5
-# }
+x = 4;
+switch(x!){
+  0 -> {
+
+  }
+}
 
 
 FINISH

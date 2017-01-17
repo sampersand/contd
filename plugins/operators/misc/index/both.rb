@@ -5,7 +5,7 @@ module Operators::Index
   module Both
     extend Operators
 
-    OPERATOR = Operator.new( '.', 5 ){ |args, current|
+    OPERATOR = Operator.new( '.', priority: 5 ){ |args, current|
       attribute = args.pop
       object = args.pop
       raise "Attribute not found `#{attribute}`" unless object.known.fetch(attribute, false) ||

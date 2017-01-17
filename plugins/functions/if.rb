@@ -8,34 +8,19 @@ module Functions::If
 
     if_false = args.stack.length == 3 ? args.pop : nil
     if_true = args.pop
-    condition = args.pop
-
-    if condition
+    cond = args.pop
+    cond = cond.call(Container.new, current).pop
+    if cond
       if_true
     elsif if_false
       if_false
+      # if_false.call(Container.new, current)
     else
+      nil
     end
 
   }
-  def self.handle_next(parser:, result:)
-    return unless parser.peek(self::FUNCTION.name.length) == self::FUNCTION.name.to_s
-    # result << parser.next(self::FUNCTION.name.length)
-    # result[self::FUNCTION.name] = self::FUNCTION
-    parser.next(self::FUNCTION.name.length) # pop the name
-    args = Container.new
-    parser.handle_next(result: args) until args.stack.length == 2
-    p parser.peek_handle_next(result: Container.new)
 
-    exit
-    result << args
-    result << self::FUNCTION
-    result << Keyword::Call.new
-    parser.feed(':', '(', ')')
-    :retry
-    
-  end
-  
 end
 
 

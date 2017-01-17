@@ -5,7 +5,7 @@ module Operators::Index
   module Stack
     extend Operators
 
-    OPERATOR = Operator.new( '.$', 5 ){ |args, current|
+    OPERATOR = Operator.new( '.$', priority: 5 ){ |args, current|
       position = args.pop
       object = args.pop
       object.stack.fetch(position){ raise "Stack position not found `#{position}`" }

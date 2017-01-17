@@ -5,8 +5,11 @@ module Functions
       # result << parser.next(self::FUNCTION.name.length)
       # result[self::FUNCTION.name] = self::FUNCTION
       parser.next(self::FUNCTION.name.length) # pop the name
+      args = Container.new
+      parser.handle_next(result: args) until args.stack.length == self::ARG_LENGTH
+      result << args
       result << self::FUNCTION
-      parser.feed(':')
+      result << Keyword::Call.new
       true
     end
   end
