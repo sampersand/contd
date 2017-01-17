@@ -9,13 +9,13 @@ require_relative 'comments'
 require_relative 'operators'
 require_relative 'containers'
 require_relative 'functions'
+require_relative 'booleans'
 
 module Standard
   extend PluginModule
 
-  PLUGINS = [Functions, Text, Containers,
-             Numbers, Comments,
-             Operators, Keywords, Variable, Whitespace]
+  PLUGINS = [Functions, Text, Containers, Numbers, Comments,
+             Operators, Keywords, Booleans, Variable, Whitespace]
 end
 
 

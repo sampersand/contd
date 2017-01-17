@@ -1,7 +1,7 @@
 module Variable
 
-  VARIABLE_START_REGEX = /[a-zA-Z_]/
-  VARIABLE_BODY_REGEX  = /[a-zA-Z0-9_]/
+  VARIABLE_START_REGEX = /[a-z_]/i
+  VARIABLE_BODY_REGEX  = /[a-z0-9_]/i
 
   module_function
 

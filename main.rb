@@ -80,11 +80,17 @@ car = {
 
 '
 
-input = %|
+input = <<FINISH
+
+1 < 3
+/*
 x=3;
-#disp!:(if!:[x! > 3, {'x > 3'}, {'x < 3'}])
-if!:([x > 3], {'x > 3'}, {'x < 3'})
-|
+if!:([x > 3],
+  {'x > 3'},
+  {'x < 3'}
+)
+*/
+FINISH
 
 require_relative 'plugins/standard'
 parser = Parser.new(input)
